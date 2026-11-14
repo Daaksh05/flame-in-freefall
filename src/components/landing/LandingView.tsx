@@ -98,6 +98,15 @@ const REFERENCES = [
   },
 ];
 
+const RELATED_RESEARCH = [
+  {
+    title: "Flame Spread and Heat Transfer over Discrete Fuels separated by Metal Barriers under Microgravity",
+    authors: "Ries, Krieger, Meyer & Eigenbrod — ZARM drop tower experiments",
+    publication: "Proceedings of the Combustion Institute, 2026 (DOI: 10.1016/j.proci.2026.106483)",
+    url: "https://zenodo.org/records/18479713",
+  },
+];
+
 const FAQS = [
   {
     q: "What does \"microgravity\" actually change about a flame?",
@@ -515,6 +524,33 @@ export function LandingView() {
                 </li>
               ))}
             </ol>
+
+            <h3 className="mt-12 text-lg font-semibold tracking-[-0.01em] text-slate-900">
+              Related external research
+            </h3>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+              Not part of this dataset or pipeline, but directly relevant further reading on
+              microgravity solid-fuel combustion.
+            </p>
+            <ul className="mt-4 space-y-3">
+              {RELATED_RESEARCH.map((ref) => (
+                <li
+                  key={ref.url}
+                  className="rounded-2xl border border-dashed border-slate-300 p-5 transition-colors hover:border-[#FED7AA] hover:bg-[#FFF4EC]"
+                >
+                  <a
+                    href={ref.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-semibold text-slate-900 hover:text-[#EA580C] hover:underline"
+                  >
+                    {ref.title}
+                  </a>
+                  <p className="mt-1 text-xs text-slate-500">{ref.authors}</p>
+                  <p className="mt-0.5 text-xs text-slate-400">{ref.publication}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       </main>
