@@ -6,7 +6,7 @@
 # weights (~5GB) are cached across restarts instead of re-downloaded every boot.
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates zstd \
     && rm -rf /var/lib/apt/lists/*
 
 # Official Ollama install script (Linux binary)
