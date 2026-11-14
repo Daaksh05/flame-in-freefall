@@ -11,6 +11,7 @@ import {
   Server,
   ChevronRight,
   ChevronLeft,
+  Home,
 } from "lucide-react";
 import { checkBackendHealth } from "@/services/healthService";
 import { API_BASE_URL } from "@/lib/constants";
@@ -86,7 +87,7 @@ export function Sidebar() {
       <div className="flex h-screen flex-col justify-between">
         <div>
           <div className="flex items-center justify-between border-b border-slate-200 p-4">
-            <Link href="/overview" className="flex items-center gap-3 overflow-hidden">
+            <Link href="/" className="flex items-center gap-3 overflow-hidden" title="Back to homepage">
               <FlameLogo />
 
               {!collapsed && (
@@ -126,6 +127,15 @@ export function Sidebar() {
           )}
 
           <div className="space-y-1 p-3">
+            <Link
+              href="/"
+              title={collapsed ? "Back to homepage" : undefined}
+              className="group mb-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-600 transition-colors hover:border-[#FED7AA] hover:bg-[#FFF4EC] hover:text-[#EA580C]"
+            >
+              <Home className="h-4 w-4 text-slate-500 group-hover:text-[#EA580C]" />
+              {!collapsed && <span>Back to Homepage</span>}
+            </Link>
+
             {!collapsed && (
               <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                 Mission Views
