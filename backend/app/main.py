@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 
 from fastapi import FastAPI
@@ -8,9 +9,12 @@ from app.services.rag import _get_collection
 
 app = FastAPI(title="Flame in Freefall API")
 
+# Comma-separated list of allowed origins, e.g. "https://flame-in-freefall.vercel.app,http://localhost:3000"
+_allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[origin.strip() for origin in _allowed_origins.split(",") if origin.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
 )
