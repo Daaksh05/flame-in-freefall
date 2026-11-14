@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f5f3ef;
+  --foreground: #101828;
+  --panel: rgba(255, 255, 255, 0.8);
+  --panel-strong: #ffffff;
+  --border: rgba(15, 23, 42, 0.08);
+  --muted: #5c6472;
+  --accent: #1f6f68;
+  --accent-strong: #17413f;
+  --accent-soft: #e1f1ee;
+  --warm: #b7631d;
+  --warm-soft: #f4e5d5;
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(180deg, #f6f3ee 0%, #f1f5f3 100%);
+  color: var(--foreground);
+  overflow-x: hidden;
+  background-attachment: fixed;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef1ee;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9d0d8;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3acb7;
+}
+
+@layer components {
+  .nasa-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    backdrop-filter: blur(14px);
+  }
+
+  .nasa-card-hover {
+    transition: all 0.2s ease;
+  }
+
+  .nasa-card-hover:hover {
+    border-color: rgba(31, 111, 104, 0.25);
+    box-shadow: 0 16px 24px rgba(15, 23, 42, 0.08);
+  }
+}
