@@ -16,6 +16,6 @@ out/
 # OS
 .DS_Store
 
-# Data (large raw files kept out of git; processed CSVs tracked)
-data/raw/*.pdf
+# Data (large raw PDFs kept out of git; extracted text + processed CSVs tracked)
+data/raw/**/*.pdf
 data/chroma/

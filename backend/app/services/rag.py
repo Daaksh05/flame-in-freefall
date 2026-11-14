@@ -9,7 +9,10 @@ EMBED_MODEL = "nomic-embed-text"
 CHAT_MODEL = "llama3.2"
 
 _client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-_collection = _client.get_or_create_collection("combustion_reports")
+
+
+def _get_collection():
+    return _client.get_or_create_collection("combustion_reports")
 
 
 def _chunk_text(text: str, chunk_size: int = 800, overlap: int = 100) -> list[str]:
@@ -46,14 +49,15 @@ def index_reports() -> int:
 
 
 def ask(question: str, n_results: int = 4) -> dict:
-    if _collection.count() == 0:
+    collection = _get_collection()
+    if collection.count() == 0:
         return {
             "answer": "No reports indexed yet — run the indexing step once report text is in data/raw/reports.",
             "sources": [],
         }
 
     query_embedding = ollama.embeddings(model=EMBED_MODEL, prompt=question)["embedding"]
-    results = _collection.query(query_embeddings=[query_embedding], n_results=n_results)
+    results = collection.query(query_embeddings=[query_embedding], n_results=n_results)
 
     context_chunks = results["documents"][0]
     sources = [meta["source"] for meta in results["metadatas"][0]]
