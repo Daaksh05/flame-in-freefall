@@ -1,0 +1,7 @@
+experiment_id,program,platform,material,oxygen_pct,gravity_level,flow_velocity_cm_s,flame_spread_rate_mm_s,burn_rate_mg_s,extinguished,source_report
+FLEX-001,FLEX,ISS-CIR,Heptane droplet,21,microgravity,0,3.2,1.8,False,FLEX Final Report NASA/TM-2012
+FLEX-014,FLEX,ISS-CIR,Heptane droplet,15,microgravity,0,1.1,0.9,True,FLEX Final Report NASA/TM-2012
+BASS-007,BASS-II,ISS-CIR,Cotton fabric,21,microgravity,5,0.8,2.1,False,BASS-II Final Report NASA/TM-2016
+BASS-012,BASS-II,ISS-CIR,Cotton fabric,25,microgravity,5,1.6,3.4,False,BASS-II Final Report NASA/TM-2016
+BASS-019,BASS-II,ISS-CIR,PMMA sheet,21,microgravity,10,0.5,1.2,True,BASS-II Final Report NASA/TM-2016
+GROUND-001,FLEX,Ground control,Heptane droplet,21,1g,0,5.8,4.0,False,FLEX Final Report NASA/TM-2012
