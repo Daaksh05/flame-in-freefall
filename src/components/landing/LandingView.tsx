@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FileText, Database, Calculator, MessagesSquare, ArrowRight, Flame as FlameIcon, Shield, Grid3x3 } from "lucide-react";
 import { FlameLogo } from "@/components/common/FlameLogo";
 
 const NAV_LINKS = [
@@ -148,6 +149,34 @@ const RELATED_RESEARCH = [
     publication: "Proceedings of the Combustion Institute, 2026 (DOI: 10.1016/j.proci.2026.106483)",
     url: "https://zenodo.org/records/18479713",
   },
+];
+
+const PROGRAMS = [
+  {
+    icon: FlameIcon,
+    name: "BASS",
+    full: "Burning and Suppression of Solids",
+    body: "Early ISS flame-spread testing — the foundational program for this dataset.",
+  },
+  {
+    icon: Shield,
+    name: "BASS-II",
+    full: "NASA/TM-20210011385",
+    body: "Follow-on program covering opposed-flow and axial stagnation flammability boundaries.",
+  },
+  {
+    icon: Grid3x3,
+    name: "Confined Combustion",
+    full: "CCF program",
+    body: "Studies how enclosure geometry changes flame spread behavior in microgravity.",
+  },
+];
+
+const PIPELINE = [
+  { icon: FileText, label: "NTRS report PDFs" },
+  { icon: Database, label: "Structured test-condition records" },
+  { icon: Calculator, label: "Fire Risk Index + ChromaDB index" },
+  { icon: MessagesSquare, label: "Risk rankings + RAG answers" },
 ];
 
 const FAQS = [
@@ -502,48 +531,80 @@ export function LandingView() {
         </section>
 
         {/* Data Sources & Process */}
-        <section className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FED7AA] bg-[#FFF4EC] px-3 py-1 text-xs font-semibold text-[#EA580C]">
-            BEHIND THE DASHBOARD
-          </span>
-          <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-slate-900">
-            Data sources &amp; process
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
-            We use NASA Technical Reports Server documents from three microgravity combustion
-            programs as primary input:
-          </p>
+        <section className="border-t border-slate-200 bg-[#f8f7f4]">
+          <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FED7AA] bg-white px-3 py-1 text-xs font-semibold text-[#EA580C]">
+              BEHIND THE DASHBOARD
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-slate-900">
+              Data sources &amp; process
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
+              We use NASA Technical Reports Server documents from three microgravity combustion
+              programs as primary input.
+            </p>
 
-          <ul className="mt-4 max-w-2xl space-y-2 text-sm text-slate-600">
-            <li>
-              <span className="font-semibold text-slate-900">BASS</span> — Burning and Suppression
-              of Solids, early ISS flame-spread testing
-            </li>
-            <li>
-              <span className="font-semibold text-slate-900">BASS-II</span> — follow-on program
-              (NASA/TM-20210011385), opposed-flow and axial stagnation flammability boundaries
-            </li>
-            <li>
-              <span className="font-semibold text-slate-900">Confined Combustion</span> — effects
-              of enclosure geometry on flame spread in microgravity
-            </li>
-          </ul>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {PROGRAMS.map((program) => {
+                const Icon = program.icon;
+                return (
+                  <div
+                    key={program.name}
+                    className="rounded-2xl border border-slate-200 bg-white p-5 transition-colors hover:border-[#FED7AA] hover:bg-[#FFF4EC]"
+                  >
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFE4CC] text-[#EA580C]">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div className="mt-3 text-sm font-semibold text-slate-900">{program.name}</div>
+                    <div className="text-xs text-slate-400">{program.full}</div>
+                    <p className="mt-2 text-xs leading-relaxed text-slate-600">{program.body}</p>
+                  </div>
+                );
+              })}
+            </div>
 
-          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-600">
-            Report PDFs are text-extracted and parsed into structured test-condition records
-            (material, oxygen %, flow velocity, outcome), which feed both the Fire Risk Index
-            computation and a ChromaDB vector index queried by a locally-run LLM (Ollama) for the
-            research assistant — so every number and every answer traces back to a real document.
-          </p>
+            <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 md:p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+                From PDF to grounded answer
+              </p>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
+                {PIPELINE.map((step, i) => {
+                  const Icon = step.icon;
+                  return (
+                    <div key={step.label} className="flex items-center gap-3 sm:flex-1">
+                      <div className="flex flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-[#f8f7f4] px-4 py-3 sm:flex-col sm:text-center">
+                        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-[#FFE4CC] text-[#EA580C] sm:mx-auto">
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <span className="text-xs font-medium leading-snug text-slate-700">
+                          {step.label}
+                        </span>
+                      </div>
+                      {i < PIPELINE.length - 1 && (
+                        <ArrowRight className="hidden h-4 w-4 flex-shrink-0 text-slate-300 sm:block" />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="mt-5 text-xs leading-relaxed text-slate-500">
+                Report PDFs are text-extracted and parsed into structured test-condition records
+                (material, oxygen %, flow velocity, outcome), which feed both the Fire Risk Index
+                computation and a ChromaDB vector index queried by a locally-run LLM (Ollama) — so
+                every number and every answer traces back to a real document.
+              </p>
+            </div>
 
-          <a
-            href="https://ntrs.nasa.gov/"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#EA580C] hover:underline"
-          >
-            Browse NASA Technical Reports Server →
-          </a>
+            <a
+              href="https://ntrs.nasa.gov/"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-slate-900 to-black px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+            >
+              Browse NASA Technical Reports Server
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
         </section>
 
         {/* FAQ */}
