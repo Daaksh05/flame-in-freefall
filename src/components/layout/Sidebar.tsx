@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Flame,
   LayoutDashboard,
   Layers,
   GitCompare,
@@ -87,8 +86,28 @@ export function Sidebar() {
         <div>
           <div className="flex items-center justify-between border-b border-slate-200 p-4">
             <Link href="/overview" className="flex items-center gap-3 overflow-hidden">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#1f6f68] text-white shadow-sm">
-                <Flame className="h-5 w-5" />
+              <div
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl shadow-sm"
+                style={{ background: "linear-gradient(145deg, #FB923C 0%, #EA580C 55%, #9A3412 100%)" }}
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 2.5c.6 2.4-.4 3.9-1.8 5.4-1.6 1.7-2.9 3.3-2.9 5.6a4.7 4.7 0 0 0 9.4 0c0-1.2-.4-2.1-1-3 .1 1.3-.4 2.2-1.1 2.8-.2-1.6-1-2.5-2-3.4-.7-.6-.9-1.5-.6-2.4.3.5.9.9 1.5 1 .2-2.3-.7-4.1-1.5-6Z"
+                    fill="#FFEDD5"
+                  />
+                  <path
+                    d="M12 2.5c.6 2.4-.4 3.9-1.8 5.4-1.6 1.7-2.9 3.3-2.9 5.6a4.7 4.7 0 0 0 9.4 0c0-1.2-.4-2.1-1-3 .1 1.3-.4 2.2-1.1 2.8-.2-1.6-1-2.5-2-3.4-.7-.6-.9-1.5-.6-2.4.3.5.9.9 1.5 1 .2-2.3-.7-4.1-1.5-6Z"
+                    fill="url(#flame-core)"
+                    fillOpacity="0.9"
+                  />
+                  <defs>
+                    <linearGradient id="flame-core" x1="12" y1="2.5" x2="12" y2="18.6" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#FDE68A" />
+                      <stop offset="45%" stopColor="#FB923C" />
+                      <stop offset="100%" stopColor="#EA580C" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
 
               {!collapsed && (
@@ -97,7 +116,7 @@ export function Sidebar() {
                     Flame In Freefall
                   </div>
                   <div className="mt-0.5 flex items-center gap-1.5 text-[10px] text-slate-500">
-                    <span className="rounded-full bg-[#e1f1ee] px-1.5 py-0.5 font-medium text-[#1f6f68]">
+                    <span className="rounded-full bg-[#FFE4CC] px-1.5 py-0.5 font-medium text-[#EA580C]">
                       Microgravity
                     </span>
                     <span>Fire safety</span>
@@ -146,11 +165,11 @@ export function Sidebar() {
                     title={collapsed ? item.name : undefined}
                     className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-colors ${
                       isActive
-                        ? "border border-[#cfe5e2] bg-[#edf7f5] text-slate-900"
+                        ? "border border-[#FED7AA] bg-[#FFF4EC] text-slate-900"
                         : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                     }`}
                   >
-                    <Icon className={`h-4 w-4 ${isActive ? "text-[#1f6f68]" : "text-slate-500"}`} />
+                    <Icon className={`h-4 w-4 ${isActive ? "text-[#EA580C]" : "text-slate-500"}`} />
 
                     {!collapsed && (
                       <div className="min-w-0 flex-1">
@@ -160,7 +179,7 @@ export function Sidebar() {
                             <span
                               className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${
                                 isActive
-                                  ? "bg-[#dfeeea] text-[#1f6f68]"
+                                  ? "bg-[#FFE8D1] text-[#EA580C]"
                                   : "bg-slate-200 text-slate-600"
                               }`}
                             >
@@ -199,7 +218,7 @@ export function Sidebar() {
           {!collapsed && (
             <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-[10px] text-slate-500">
               <span>localhost:8000</span>
-              <span className="font-semibold text-[#1f6f68]">REST + RAG</span>
+              <span className="font-semibold text-[#EA580C]">REST + RAG</span>
             </div>
           )}
         </div>

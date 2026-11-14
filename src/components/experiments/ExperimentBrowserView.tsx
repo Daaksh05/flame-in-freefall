@@ -111,12 +111,12 @@ export function ExperimentBrowserView() {
       <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-[#e1f1ee] px-2 py-0.5 text-[10px] font-semibold text-[#1f6f68]">
+            <span className="rounded-full bg-[#FFE4CC] px-2 py-0.5 text-[10px] font-semibold text-[#EA580C]">
               Experiment Browser
             </span>
           </div>
           <h1 className="text-xl md:text-2xl font-semibold tracking-[-0.02em] text-slate-900 flex items-center gap-2">
-            <Layers className="w-5 h-5 text-[#1f6f68]" />
+            <Layers className="w-5 h-5 text-[#EA580C]" />
             <span>NASA BASS / BASS-II Experiment Browser</span>
           </h1>
           <p className="text-sm text-slate-500 max-w-2xl">
@@ -134,7 +134,7 @@ export function ExperimentBrowserView() {
           <button
             onClick={fetchRecords}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1f6f68] hover:bg-[#19615b] text-white font-medium text-xs transition-colors duration-200 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white font-medium text-xs transition-colors duration-200 disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             <span>Refresh</span>
@@ -146,10 +146,10 @@ export function ExperimentBrowserView() {
       <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-5">
         <div className="flex items-center justify-between pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#1f6f68]" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#EA580C]" />
             <span>Search &amp; filter parameters</span>
           </div>
-          <span className="text-xs font-medium text-[#1f6f68] bg-[#edf7f5] px-2.5 py-1 rounded-full border border-[#cfe5e2]">
+          <span className="text-xs font-medium text-[#EA580C] bg-[#FFF4EC] px-2.5 py-1 rounded-full border border-[#FED7AA]">
             {total} records found
           </span>
         </div>
@@ -170,7 +170,7 @@ export function ExperimentBrowserView() {
                     fetchRecords();
                   }
                 }}
-                className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200"
+                className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#FED7AA] transition-colors duration-200"
               />
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
             </div>
@@ -185,7 +185,7 @@ export function ExperimentBrowserView() {
                 setSelectedMaterial(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#FED7AA] transition-colors duration-200"
             >
               <option value="">All materials</option>
               {materialsList.map((m) => (
@@ -205,7 +205,7 @@ export function ExperimentBrowserView() {
                 setSelectedPlatform(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#FED7AA] transition-colors duration-200"
             >
               <option value="ALL">All platforms</option>
               {Object.entries(PLATFORM_INFO).map(([key, info]) => (
@@ -220,7 +220,7 @@ export function ExperimentBrowserView() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-[11px]">
               <span className="text-slate-500">O₂ concentration range</span>
-              <span className="text-[#1f6f68] font-semibold">
+              <span className="text-[#EA580C] font-semibold">
                 {minOxygen}% – {maxOxygen}% O₂
               </span>
             </div>
@@ -234,7 +234,7 @@ export function ExperimentBrowserView() {
                   const val = Number(e.target.value);
                   if (val <= maxOxygen) setMinOxygen(val);
                 }}
-                className="w-full accent-[#1f6f68] cursor-pointer"
+                className="w-full accent-[#EA580C] cursor-pointer"
               />
               <input
                 type="range"
@@ -245,7 +245,7 @@ export function ExperimentBrowserView() {
                   const val = Number(e.target.value);
                   if (val >= minOxygen) setMaxOxygen(val);
                 }}
-                className="w-full accent-[#1f6f68] cursor-pointer"
+                className="w-full accent-[#EA580C] cursor-pointer"
               />
             </div>
           </div>
@@ -293,7 +293,7 @@ export function ExperimentBrowserView() {
                   >
                     <td className="py-3.5 px-4 font-medium text-slate-900">
                       <div className="flex items-center gap-2">
-                        <Flame className="w-3.5 h-3.5 text-[#1f6f68]" />
+                        <Flame className="w-3.5 h-3.5 text-[#EA580C]" />
                         <span>{exp.test_run || exp.name}</span>
                       </div>
                       <span className="text-[10px] text-slate-400 block">{exp.id}</span>
@@ -324,7 +324,7 @@ export function ExperimentBrowserView() {
                       {formatPressure(exp.ambient_pressure_kpa)}
                     </td>
 
-                    <td className="py-3.5 px-4 font-semibold text-[#1f6f68]">
+                    <td className="py-3.5 px-4 font-semibold text-[#EA580C]">
                       {formatRate(exp.flame_spread_rate_mm_s)}
                     </td>
 
@@ -351,7 +351,7 @@ export function ExperimentBrowserView() {
                         </button>
                         <Link
                           href={`/comparison?expA=${encodeURIComponent(exp.id)}`}
-                          className="p-1.5 rounded-lg bg-[#edf7f5] hover:bg-[#dfeeea] text-[#1f6f68] border border-[#cfe5e2] transition-colors duration-200"
+                          className="p-1.5 rounded-lg bg-[#FFF4EC] hover:bg-[#FFE8D1] text-[#EA580C] border border-[#FED7AA] transition-colors duration-200"
                           title="Send to comparison tool"
                         >
                           <GitCompare className="w-3.5 h-3.5" />
@@ -418,7 +418,7 @@ export function ExperimentBrowserView() {
 
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-[#1f6f68] bg-[#edf7f5] px-2 py-0.5 rounded-full border border-[#cfe5e2] font-semibold">
+                <span className="text-[10px] text-[#EA580C] bg-[#FFF4EC] px-2 py-0.5 rounded-full border border-[#FED7AA] font-semibold">
                   {formatPlatform(selectedExperiment.platform)}
                 </span>
                 <span className="text-[11px] text-slate-400">
@@ -440,7 +440,7 @@ export function ExperimentBrowserView() {
 
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
                 <span className="text-[10px] text-slate-500 uppercase">Oxygen conc.</span>
-                <p className="text-xs font-semibold text-[#1f6f68] mt-0.5">
+                <p className="text-xs font-semibold text-[#EA580C] mt-0.5">
                   {formatOxygen(selectedExperiment.oxygen_concentration)}
                 </p>
               </div>
@@ -461,7 +461,7 @@ export function ExperimentBrowserView() {
 
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
                 <span className="text-[10px] text-slate-500 uppercase">Flame spread</span>
-                <p className="text-xs font-semibold text-[#1f6f68] mt-0.5">
+                <p className="text-xs font-semibold text-[#EA580C] mt-0.5">
                   {formatRate(selectedExperiment.flame_spread_rate_mm_s)}
                 </p>
               </div>
@@ -476,7 +476,7 @@ export function ExperimentBrowserView() {
 
             {selectedExperiment.notes && (
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-600 leading-relaxed">
-                <span className="text-[10px] text-[#1f6f68] uppercase tracking-wider block mb-1 font-semibold">
+                <span className="text-[10px] text-[#EA580C] uppercase tracking-wider block mb-1 font-semibold">
                   NASA test log &amp; observations
                 </span>
                 {selectedExperiment.notes}
@@ -486,7 +486,7 @@ export function ExperimentBrowserView() {
             <div className="flex items-center justify-between pt-3 border-t border-slate-100">
               <Link
                 href={`/comparison?expA=${encodeURIComponent(selectedExperiment.id)}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#edf7f5] hover:bg-[#dfeeea] text-[#1f6f68] border border-[#cfe5e2] text-xs font-medium transition-colors duration-200"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FFF4EC] hover:bg-[#FFE8D1] text-[#EA580C] border border-[#FED7AA] text-xs font-medium transition-colors duration-200"
               >
                 <GitCompare className="w-3.5 h-3.5" />
                 <span>Compare in side-by-side view</span>

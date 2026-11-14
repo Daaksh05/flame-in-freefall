@@ -66,7 +66,7 @@ export function OverviewView() {
         <div className="absolute inset-y-0 right-0 w-80 bg-[radial-gradient(circle,_rgba(31,111,104,0.12),transparent_60%)]" />
         <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#dfeeea] bg-[#edf7f5] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#1f6f68]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#FFE8D1] bg-[#FFF4EC] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-[#EA580C]">
               <Flame className="h-3.5 w-3.5" />
               <span>Microgravity fire intelligence</span>
             </div>
@@ -108,14 +108,14 @@ export function OverviewView() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between rounded-2xl border border-[#dfeeea] bg-[#edf7f5] px-3 py-2">
+            <div className="flex items-center justify-between rounded-2xl border border-[#FFE8D1] bg-[#FFF4EC] px-3 py-2">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Dataset</p>
                 <p className="mt-1 text-sm font-semibold text-slate-900">
                   {metrics ? `${metrics.total_experiments} real NASA test conditions` : "Loading…"}
                 </p>
               </div>
-              <ArrowRight className="h-4 w-4 text-[#1f6f68]" />
+              <ArrowRight className="h-4 w-4 text-[#EA580C]" />
             </div>
           </div>
 
@@ -132,7 +132,7 @@ export function OverviewView() {
               href="/assistant"
               className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
             >
-              <Sparkles className="h-3.5 w-3.5 text-[#1f6f68]" />
+              <Sparkles className="h-3.5 w-3.5 text-[#EA580C]" />
               <span>Ask AI assistant</span>
             </Link>
           </div>
@@ -145,10 +145,10 @@ export function OverviewView() {
             label: "Experiments tracked",
             value: metrics?.total_experiments ?? "—",
             detail: "BASS, BASS-II, FLEX, Confined Combustion",
-            accent: "text-[#1f6f68]",
+            accent: "text-[#EA580C]",
             icon: Activity,
-            bar: "w-4/5 bg-[#1f6f68]",
-            iconBg: "bg-[#e1f1ee] text-[#1f6f68]",
+            bar: "w-4/5 bg-[#EA580C]",
+            iconBg: "bg-[#FFE4CC] text-[#EA580C]",
             trend: null,
           },
           {
@@ -178,10 +178,10 @@ export function OverviewView() {
             label: "Materials cataloged",
             value: metrics?.materials_cataloged ?? "—",
             detail: "Distinct material variants in the dataset",
-            accent: "text-[#1f6f68]",
+            accent: "text-[#EA580C]",
             icon: Gauge,
-            bar: "w-1/2 bg-[#1f6f68]",
-            iconBg: "bg-[#e1f1ee] text-[#1f6f68]",
+            bar: "w-1/2 bg-[#EA580C]",
+            iconBg: "bg-[#FFE4CC] text-[#EA580C]",
             trend: null,
           },
         ].map(({ label, value, detail, accent, icon: Icon, bar, iconBg, trend }) => (
@@ -251,7 +251,7 @@ export function OverviewView() {
                     type="button"
                     onClick={() => setActiveMaterialInsight(item)}
                     className={`flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition-colors ${
-                      isSelected ? "bg-[#edf7f5]" : "hover:bg-slate-50"
+                      isSelected ? "bg-[#FFF4EC]" : "hover:bg-slate-50"
                     }`}
                   >
                     <div className="flex min-w-0 items-center gap-3">
@@ -276,7 +276,7 @@ export function OverviewView() {
                       <span className="text-[#b7631d]">
                         {item.extinctionVelocity !== null ? `${item.extinctionVelocity} cm/s` : "N/A"}
                       </span>
-                      <span className="text-[#1f6f68]">{item.loi !== null ? `${item.loi}% O₂` : "N/A"}</span>
+                      <span className="text-[#EA580C]">{item.loi !== null ? `${item.loi}% O₂` : "N/A"}</span>
                     </div>
                   </button>
                 );
@@ -318,7 +318,7 @@ export function OverviewView() {
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                   <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Lowest sustaining O₂</div>
-                  <div className="mt-1 text-lg font-semibold text-[#1f6f68]">
+                  <div className="mt-1 text-lg font-semibold text-[#EA580C]">
                     {activeMaterialInsight.loi !== null ? `${activeMaterialInsight.loi}% O₂` : "N/A"}
                   </div>
                 </div>
@@ -333,7 +333,7 @@ export function OverviewView() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
 
-                <Link href="/assistant" className="inline-flex items-center gap-2 text-sm font-medium text-[#1f6f68]">
+                <Link href="/assistant" className="inline-flex items-center gap-2 text-sm font-medium text-[#EA580C]">
                   <Sparkles className="h-4 w-4" />
                   <span>RAG analysis</span>
                 </Link>
@@ -348,7 +348,7 @@ export function OverviewView() {
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-semibold tracking-[-0.03em] text-slate-900">
-              <ShieldAlert className="h-4 w-4 text-[#1f6f68]" />
+              <ShieldAlert className="h-4 w-4 text-[#EA580C]" />
               Operational bulletins
             </h2>
             <p className="mt-1 text-sm text-slate-500">
@@ -397,7 +397,7 @@ export function OverviewView() {
                 <p className="mt-4 text-sm leading-6 text-slate-600">{insight.summary}</p>
 
                 <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#1f6f68]">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#EA580C]">
                     Recommended protocol
                   </div>
                   <p className="mt-2 text-sm leading-6 text-slate-600">{insight.recommended_protocol}</p>

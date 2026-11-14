@@ -14,7 +14,7 @@ import { getExperiments } from "@/services/experimentService";
 import { formatPlatform } from "@/lib/utils";
 
 const SLOT_STYLES = [
-  { label: "A", accent: "text-[#1f6f68]", border: "border-[#cfe5e2]", chip: "bg-[#edf7f5] text-[#1f6f68] border-[#cfe5e2]", ring: "focus:border-[#1f6f68] focus:ring-[#cfe5e2]" },
+  { label: "A", accent: "text-[#EA580C]", border: "border-[#FED7AA]", chip: "bg-[#FFF4EC] text-[#EA580C] border-[#FED7AA]", ring: "focus:border-[#EA580C] focus:ring-[#FED7AA]" },
   { label: "B", accent: "text-[#b7631d]", border: "border-[#f0d9bc]", chip: "bg-[#f4e5d5] text-[#b7631d] border-[#f0d9bc]", ring: "focus:border-[#b7631d] focus:ring-[#f4e5d5]" },
   { label: "C", accent: "text-slate-600", border: "border-slate-200", chip: "bg-slate-50 text-slate-600 border-slate-200", ring: "focus:border-slate-400 focus:ring-slate-100" },
 ];
@@ -82,12 +82,12 @@ export function ComparisonView() {
       <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-[#e1f1ee] px-2 py-0.5 text-[10px] font-semibold text-[#1f6f68]">
+            <span className="rounded-full bg-[#FFE4CC] px-2 py-0.5 text-[10px] font-semibold text-[#EA580C]">
               Side-by-side comparison
             </span>
           </div>
           <h1 className="text-xl md:text-2xl font-semibold tracking-[-0.02em] text-slate-900 flex items-center gap-2">
-            <GitCompare className="w-5 h-5 text-[#1f6f68]" />
+            <GitCompare className="w-5 h-5 text-[#EA580C]" />
             <span>Multi-experiment side-by-side comparison</span>
           </h1>
           <p className="text-sm text-slate-500 max-w-2xl">
@@ -101,7 +101,7 @@ export function ComparisonView() {
             className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium border transition-colors duration-200 ${
               enableThirdSlot
                 ? "bg-rose-50 hover:bg-rose-100 text-rose-600 border-rose-200"
-                : "bg-[#edf7f5] hover:bg-[#dfeeea] text-[#1f6f68] border-[#cfe5e2]"
+                : "bg-[#FFF4EC] hover:bg-[#FFE8D1] text-[#EA580C] border-[#FED7AA]"
             }`}
           >
             {enableThirdSlot ? (
@@ -120,7 +120,7 @@ export function ComparisonView() {
           <button
             onClick={() => runComparison(selectedIds)}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1f6f68] hover:bg-[#19615b] text-white font-medium text-xs transition-colors duration-200 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] text-white font-medium text-xs transition-colors duration-200 disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             <span>Recalculate</span>
@@ -250,8 +250,8 @@ export function ComparisonView() {
 
           {/* AI Synthesis Card */}
           {comparison.aiSynthesis && (
-            <div className="p-6 rounded-2xl bg-[#edf7f5] border border-[#cfe5e2] space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#1f6f68]">
+            <div className="p-6 rounded-2xl bg-[#FFF4EC] border border-[#FED7AA] space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#EA580C]">
                 <Sparkles className="w-4 h-4" />
                 <span>AI synthesis • microgravity combustion regimes</span>
               </div>

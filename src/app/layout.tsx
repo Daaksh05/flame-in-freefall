@@ -27,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${jakarta.variable} ${manrope.variable} h-full antialiased`}>
-      <body className="h-full flex overflow-hidden bg-[#f5f3ef] text-slate-900 selection:bg-[#1f6f68]/20 selection:text-[#113d3a]">
+      <body className="h-full flex overflow-hidden bg-[#f5f3ef] text-slate-900 selection:bg-[#EA580C]/20 selection:text-[#7C2D12]">
         <Sidebar />
 
         <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">

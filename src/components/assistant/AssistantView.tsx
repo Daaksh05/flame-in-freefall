@@ -128,13 +128,13 @@ export function AssistantView() {
         {/* Panel Header */}
         <div className="p-5 border-b border-slate-100 bg-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#edf7f5] border border-[#cfe5e2] text-[#1f6f68] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-[#FFF4EC] border border-[#FED7AA] text-[#EA580C] flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
                 <span>NASA combustion research assistant</span>
-                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#edf7f5] text-[#1f6f68] border border-[#cfe5e2] font-medium">
+                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] font-medium">
                   NTRS grounded
                 </span>
               </h2>
@@ -151,7 +151,7 @@ export function AssistantView() {
             <select
               value={materialFilter}
               onChange={(e) => setMaterialFilter(e.target.value)}
-              className="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-600 focus:outline-none focus:border-[#1f6f68] transition-colors duration-200"
+              className="bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-600 focus:outline-none focus:border-[#EA580C] transition-colors duration-200"
             >
               <option value="">All materials</option>
               {materialsList.map((m) => (
@@ -173,7 +173,7 @@ export function AssistantView() {
               }`}
             >
               {msg.role === "assistant" && (
-                <div className="w-8 h-8 rounded-xl bg-[#edf7f5] text-[#1f6f68] border border-[#cfe5e2] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-xl bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Bot className="w-4 h-4" />
                 </div>
               )}
@@ -181,7 +181,7 @@ export function AssistantView() {
               <div
                 className={`max-w-[85%] rounded-2xl p-4.5 text-xs leading-relaxed space-y-3 ${
                   msg.role === "user"
-                    ? "bg-[#1f6f68] text-white rounded-tr-none"
+                    ? "bg-[#EA580C] text-white rounded-tr-none"
                     : "bg-white border border-slate-200 text-slate-700 rounded-tl-none"
                 }`}
               >
@@ -192,7 +192,7 @@ export function AssistantView() {
                 {/* Inline Citations List */}
                 {msg.citations && msg.citations.length > 0 && (
                   <div className="pt-3 border-t border-slate-100 space-y-2">
-                    <span className="text-[10px] text-[#1f6f68] uppercase tracking-wider block font-semibold">
+                    <span className="text-[10px] text-[#EA580C] uppercase tracking-wider block font-semibold">
                       Cited NASA technical documents
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -202,7 +202,7 @@ export function AssistantView() {
                           onClick={() => setActiveCitation(cite)}
                           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 hover:bg-slate-100 text-[11px] text-slate-600 border border-slate-200 transition-colors duration-200"
                         >
-                          <BookOpen className="w-3 h-3 text-[#1f6f68]" />
+                          <BookOpen className="w-3 h-3 text-[#EA580C]" />
                           <span className="truncate max-w-[170px]">{cite.title}</span>
                         </button>
                       ))}
@@ -249,11 +249,11 @@ export function AssistantView() {
 
           {loading && (
             <div className="flex gap-3.5 justify-start">
-              <div className="w-8 h-8 rounded-xl bg-[#edf7f5] text-[#1f6f68] border border-[#cfe5e2] flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0">
                 <Bot className="w-4 h-4" />
               </div>
               <div className="p-4 rounded-2xl bg-white border border-slate-200 text-xs text-slate-500 flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#1f6f68] animate-ping" />
+                <div className="w-2 h-2 rounded-full bg-[#EA580C] animate-ping" />
                 <span className="text-slate-600">
                   Retrieving NASA technical reports &amp; synthesizing combustion kinetics...
                 </span>
@@ -297,12 +297,12 @@ export function AssistantView() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={loading}
-              className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200 disabled:opacity-50"
+              className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#FED7AA] transition-colors duration-200 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="px-5 py-2.5 rounded-xl bg-[#1f6f68] hover:bg-[#19615b] disabled:opacity-40 text-white font-medium text-xs flex items-center gap-2 transition-colors duration-200"
+              className="px-5 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] disabled:opacity-40 text-white font-medium text-xs flex items-center gap-2 transition-colors duration-200"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Send</span>
@@ -315,10 +315,10 @@ export function AssistantView() {
       <div className="lg:col-span-4 flex flex-col rounded-3xl bg-white border border-slate-200 overflow-hidden">
         <div className="p-5 border-b border-slate-100 bg-white flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-900">
-            <BookOpen className="w-4 h-4 text-[#1f6f68]" />
+            <BookOpen className="w-4 h-4 text-[#EA580C]" />
             <span>Citation inspector</span>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#edf7f5] text-[#1f6f68] border border-[#cfe5e2] font-medium">
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] font-medium">
             NTRS verified
           </span>
         </div>
@@ -327,7 +327,7 @@ export function AssistantView() {
           {activeCitation ? (
             <div className="space-y-4 text-xs">
               <div className="space-y-1">
-                <span className="text-[10px] text-[#1f6f68] uppercase tracking-wider block font-semibold">
+                <span className="text-[10px] text-[#EA580C] uppercase tracking-wider block font-semibold">
                   Reference document
                 </span>
                 <h3 className="text-xs font-semibold text-slate-900 leading-snug">
@@ -345,7 +345,7 @@ export function AssistantView() {
                 {activeCitation.doi_or_ntrs_id && (
                   <div className="flex justify-between text-[11px]">
                     <span className="text-slate-400">Document ID:</span>
-                    <span className="text-[#1f6f68] font-semibold truncate max-w-[180px]">
+                    <span className="text-[#EA580C] font-semibold truncate max-w-[180px]">
                       {activeCitation.doi_or_ntrs_id}
                     </span>
                   </div>
@@ -368,7 +368,7 @@ export function AssistantView() {
                   href={activeCitation.source_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#edf7f5] hover:bg-[#dfeeea] text-[#1f6f68] border border-[#cfe5e2] text-xs font-medium transition-colors duration-200"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#FFF4EC] hover:bg-[#FFE8D1] text-[#EA580C] border border-[#FED7AA] text-xs font-medium transition-colors duration-200"
                 >
                   <span>Open NASA NTRS record</span>
                   <ExternalLink className="w-3.5 h-3.5" />

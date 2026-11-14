@@ -55,7 +55,7 @@ export function Header() {
       <div className="flex items-center gap-4">
         <div>
           <div className="mb-1 flex items-center gap-2">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#1f6f68]">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#EA580C]">
               {current.code}
             </span>
           </div>
@@ -80,7 +80,7 @@ export function Header() {
           className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50"
           title="Open FastAPI Swagger Documentation"
         >
-          <Terminal className="h-3.5 w-3.5 text-[#1f6f68]" />
+          <Terminal className="h-3.5 w-3.5 text-[#EA580C]" />
           <span>FastAPI Docs</span>
           <ExternalLink className="h-3 w-3 opacity-70" />
         </a>
