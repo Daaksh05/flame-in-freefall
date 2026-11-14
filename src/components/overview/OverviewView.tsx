@@ -13,87 +13,39 @@ import {
   Gauge,
 } from "lucide-react";
 import { FireSafetyInsight, SystemMetrics } from "@/types";
-import { getFireSafetyInsights, getSystemMetrics } from "@/services/insightsService";
+import {
+  getFireSafetyInsights,
+  getSystemMetrics,
+  getRiskRanking,
+  RiskRankingEntry,
+} from "@/services/insightsService";
 import { getSeverityColor } from "@/lib/utils";
-
-interface RankedMaterialRisk {
-  rank: number;
-  material: string;
-  category: string;
-  flameSpreadRate: number;
-  loi: number;
-  riskLevel: "CRITICAL" | "HIGH" | "ELEVATED" | "NOMINAL";
-  keyVulnerability: string;
-}
-
-const RANKED_MATERIALS: RankedMaterialRisk[] = [
-  {
-    rank: 1,
-    material: "PMMA (Polymethyl Methacrylate / Plexiglas)",
-    category: "Polymers",
-    flameSpreadRate: 1.15,
-    loi: 17.5,
-    riskLevel: "CRITICAL",
-    keyVulnerability: "Intense burning under weak ventilation (2–5 cm/s); lack of buoyant cooling concentrates heat at the melt layer.",
-  },
-  {
-    rank: 2,
-    material: "Polyurethane Foam Insulation",
-    category: "Foams & Composites",
-    flameSpreadRate: 0.92,
-    loi: 18.0,
-    riskLevel: "CRITICAL",
-    keyVulnerability: "High porosity allows deep smolder penetration and explosive transition to flaming in oxygen-enriched cabin air.",
-  },
-  {
-    rank: 3,
-    material: "Polyethylene (PE) Cable Jackets",
-    category: "Polymers",
-    flameSpreadRate: 0.65,
-    loi: 18.5,
-    riskLevel: "HIGH",
-    keyVulnerability: "Melt dripping is absent in microgravity; pyrolyzing melt pools adhere to the wire core and creep steadily.",
-  },
-  {
-    rank: 4,
-    material: "Nomex / Kevlar Exploration Blends",
-    category: "Fabrics & Textiles",
-    flameSpreadRate: 0.22,
-    loi: 28.0,
-    riskLevel: "ELEVATED",
-    keyVulnerability: "Self-extinguishes in Earth air but can sustain a continuous flame in lunar and Martian cabin atmospheres.",
-  },
-  {
-    rank: 5,
-    material: "Silicone Rubber Elastomer",
-    category: "Composites & Insulation",
-    flameSpreadRate: 0.48,
-    loi: 24.5,
-    riskLevel: "NOMINAL",
-    keyVulnerability: "Forms a coherent silica ash shell in microgravity that attenuates radiative feedback and flame propagation.",
-  },
-];
+import { BackendNotice } from "@/components/common/BackendNotice";
 
 export function OverviewView() {
   const [insights, setInsights] = useState<FireSafetyInsight[]>([]);
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
+  const [rankedMaterials, setRankedMaterials] = useState<RiskRankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | undefined>(undefined);
   const [selectedSeverity, setSelectedSeverity] = useState<string>("ALL");
-  const [activeMaterialInsight, setActiveMaterialInsight] = useState<RankedMaterialRisk | null>(
-    RANKED_MATERIALS[0]
-  );
+  const [activeMaterialInsight, setActiveMaterialInsight] = useState<RiskRankingEntry | null>(null);
 
   const loadData = async () => {
     setLoading(true);
+    setLoadError(undefined);
     try {
-      const [insightsData, metricsData] = await Promise.all([
+      const [insightsData, metricsData, rankingData] = await Promise.all([
         getFireSafetyInsights(),
         getSystemMetrics(),
+        getRiskRanking(),
       ]);
       setInsights(insightsData);
       setMetrics(metricsData);
-    } catch {
-      // Fallback handled gracefully elsewhere.
+      setRankedMaterials(rankingData);
+      setActiveMaterialInsight(rankingData[0] ?? null);
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : "Failed to load dashboard data");
     } finally {
       setLoading(false);
     }
@@ -139,21 +91,29 @@ export function OverviewView() {
 
             <div className="grid grid-cols-2 gap-2">
               <div className="rounded-2xl border border-slate-200 bg-white p-3">
-                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Quiescent limit</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.05em] text-slate-900">18.2%</p>
-                <p className="mt-1 text-[10px] text-slate-500">O₂ threshold</p>
+                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Lowest O₂ limit</p>
+                <p className="mt-2 text-lg font-semibold tracking-[-0.05em] text-slate-900">
+                  {rankedMaterials[0]?.loi !== null && rankedMaterials[0]?.loi !== undefined
+                    ? `${rankedMaterials[0].loi}%`
+                    : "—"}
+                </p>
+                <p className="mt-1 text-[10px] text-slate-500">O₂ threshold (lowest observed)</p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-3">
                 <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Hot spot</p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.05em] text-slate-900">PMMA</p>
-                <p className="mt-1 text-[10px] text-slate-500">Critical spread</p>
+                <p className="mt-2 truncate text-lg font-semibold tracking-[-0.05em] text-slate-900">
+                  {rankedMaterials[0]?.material ?? "—"}
+                </p>
+                <p className="mt-1 text-[10px] text-slate-500">Highest composite risk score</p>
               </div>
             </div>
 
             <div className="flex items-center justify-between rounded-2xl border border-[#dfeeea] bg-[#edf7f5] px-3 py-2">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Risk posture</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">Elevated — focused monitoring</p>
+                <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">Dataset</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">
+                  {metrics ? `${metrics.total_experiments} real NASA test conditions` : "Loading…"}
+                </p>
               </div>
               <ArrowRight className="h-4 w-4 text-[#1f6f68]" />
             </div>
@@ -183,18 +143,21 @@ export function OverviewView() {
         {[
           {
             label: "Experiments tracked",
-            value: metrics?.total_experiments ?? 148,
-            detail: "FLEX, BASS-II, ACME & SOFIE",
+            value: metrics?.total_experiments ?? "—",
+            detail: "BASS, BASS-II, FLEX, Confined Combustion",
             accent: "text-[#1f6f68]",
             icon: Activity,
             bar: "w-4/5 bg-[#1f6f68]",
             iconBg: "bg-[#e1f1ee] text-[#1f6f68]",
-            trend: "+12 new",
+            trend: null,
           },
           {
             label: "Avg flame spread rate",
-            value: metrics?.average_flame_spread_rate ? `${metrics.average_flame_spread_rate} mm/s` : "0.62 mm/s",
-            detail: "Opposed flow, 2–10 cm/s",
+            value:
+              metrics?.average_flame_spread_rate != null
+                ? `${metrics.average_flame_spread_rate} mm/s`
+                : "N/A (not reported)",
+            detail: "Across experiments with a measured spread rate",
             accent: "text-[#b7631d]",
             icon: Flame,
             bar: "w-3/5 bg-[#b7631d]",
@@ -202,9 +165,9 @@ export function OverviewView() {
             trend: null,
           },
           {
-            label: "High-risk materials",
-            value: metrics?.critical_safety_alerts ?? 7,
-            detail: "Rapid spread in exploration O₂",
+            label: "Critical-risk materials",
+            value: metrics?.critical_safety_alerts ?? "—",
+            detail: "Materials scoring ≥75/100 on the risk index",
             accent: "text-[#9b2c2c]",
             icon: ShieldAlert,
             bar: "w-2/3 bg-[#9b2c2c]",
@@ -212,9 +175,9 @@ export function OverviewView() {
             trend: "materials",
           },
           {
-            label: "Quiescent extinction limit",
-            value: "18.2% O₂",
-            detail: "Spherical radiative threshold",
+            label: "Materials cataloged",
+            value: metrics?.materials_cataloged ?? "—",
+            detail: "Distinct material variants in the dataset",
             accent: "text-[#1f6f68]",
             icon: Gauge,
             bar: "w-1/2 bg-[#1f6f68]",
@@ -262,22 +225,25 @@ export function OverviewView() {
             </p>
           </div>
           <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-            NASA GRC • ISS CIR
+            NASA BASS / BASS-II / Confined Combustion
           </span>
         </div>
 
+        {loadError && <BackendNotice endpoint="/api/v1/insights/risk-ranking" error={loadError} onRetry={loadData} />}
+
+        {!loadError && (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white/80 lg:col-span-7">
             <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
               <span>Rank & substrate</span>
               <div className="flex items-center gap-6">
-                <span>Flame velocity</span>
-                <span>LOI</span>
+                <span>Extinction v</span>
+                <span>Min O₂</span>
               </div>
             </div>
 
             <div className="divide-y divide-slate-200">
-              {RANKED_MATERIALS.map((item) => {
+              {rankedMaterials.map((item) => {
                 const isSelected = activeMaterialInsight?.rank === item.rank;
                 return (
                   <button
@@ -307,8 +273,10 @@ export function OverviewView() {
                     </div>
 
                     <div className="flex items-center gap-6 text-xs font-medium text-slate-600">
-                      <span className="text-[#b7631d]">{item.flameSpreadRate.toFixed(2)} mm/s</span>
-                      <span className="text-[#1f6f68]">{item.loi}% O₂</span>
+                      <span className="text-[#b7631d]">
+                        {item.extinctionVelocity !== null ? `${item.extinctionVelocity} cm/s` : "N/A"}
+                      </span>
+                      <span className="text-[#1f6f68]">{item.loi !== null ? `${item.loi}% O₂` : "N/A"}</span>
                     </div>
                   </button>
                 );
@@ -322,7 +290,7 @@ export function OverviewView() {
                 <span className="rounded-full bg-[#fbe7e7] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#9b2c2c]">
                   {activeMaterialInsight.riskLevel} risk
                 </span>
-                <span className="text-[11px] text-slate-500">Rank #{activeMaterialInsight.rank} of {RANKED_MATERIALS.length}</span>
+                <span className="text-[11px] text-slate-500">Rank #{activeMaterialInsight.rank} of {rankedMaterials.length}</span>
               </div>
 
               <h3 className="mt-4 text-xl font-semibold tracking-[-0.03em] text-slate-900">
@@ -336,19 +304,22 @@ export function OverviewView() {
                 <p className="mt-2 text-sm leading-6 text-slate-600">
                   {activeMaterialInsight.keyVulnerability}
                 </p>
+                <p className="mt-2 text-[10px] text-slate-400">
+                  Based on {activeMaterialInsight.testCount} test condition(s) from {activeMaterialInsight.programs.join(", ")}
+                </p>
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Flame spread</div>
+                  <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Extinction velocity</div>
                   <div className="mt-1 text-lg font-semibold text-[#b7631d]">
-                    {activeMaterialInsight.flameSpreadRate} mm/s
+                    {activeMaterialInsight.extinctionVelocity !== null ? `${activeMaterialInsight.extinctionVelocity} cm/s` : "N/A"}
                   </div>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">LOI</div>
+                  <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Lowest sustaining O₂</div>
                   <div className="mt-1 text-lg font-semibold text-[#1f6f68]">
-                    {activeMaterialInsight.loi}% O₂
+                    {activeMaterialInsight.loi !== null ? `${activeMaterialInsight.loi}% O₂` : "N/A"}
                   </div>
                 </div>
               </div>
@@ -370,6 +341,7 @@ export function OverviewView() {
             </div>
           )}
         </div>
+        )}
       </section>
 
       <section className="space-y-4">
@@ -380,7 +352,7 @@ export function OverviewView() {
               Operational bulletins
             </h2>
             <p className="mt-1 text-sm text-slate-500">
-              Recommended responses derived from NASA technical memos and mission guidance.
+              Generated from the composite risk index computed over real NASA experiment data.
             </p>
           </div>
 

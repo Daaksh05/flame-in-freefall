@@ -1,34 +1,45 @@
 import { FireSafetyInsight, SystemMetrics } from "@/types";
 import { fetchFromBackend } from "./apiClient";
-import {
-  BENCHMARK_INSIGHTS,
-  BENCHMARK_METRICS,
-} from "@/data/nasaBenchmarkData";
 
 /**
- * Fetch critical microgravity fire safety insights and threshold alerts
+ * Fetch fire-safety insights derived from the real per-material risk index.
  * Corresponds to FastAPI: GET /api/v1/insights/fire-safety
  */
 export async function getFireSafetyInsights(): Promise<FireSafetyInsight[]> {
-  try {
-    return await fetchFromBackend<FireSafetyInsight[]>("/api/v1/insights/fire-safety", {
-      method: "GET",
-    });
-  } catch {
-    return BENCHMARK_INSIGHTS;
-  }
+  return fetchFromBackend<FireSafetyInsight[]>("/api/v1/insights/fire-safety", {
+    method: "GET",
+  });
 }
 
 /**
- * Fetch aggregate telemetry & system metrics
+ * Fetch aggregate dataset metrics.
  * Corresponds to FastAPI: GET /api/v1/metrics/summary
  */
 export async function getSystemMetrics(): Promise<SystemMetrics> {
-  try {
-    return await fetchFromBackend<SystemMetrics>("/api/v1/metrics/summary", {
-      method: "GET",
-    });
-  } catch {
-    return BENCHMARK_METRICS;
-  }
+  return fetchFromBackend<SystemMetrics>("/api/v1/metrics/summary", {
+    method: "GET",
+  });
+}
+
+export interface RiskRankingEntry {
+  rank: number;
+  material: string;
+  category: string;
+  flameSpreadRate: number | null;
+  extinctionVelocity: number | null;
+  loi: number | null;
+  riskLevel: "CRITICAL" | "HIGH" | "ELEVATED" | "NOMINAL";
+  keyVulnerability: string;
+  testCount: number;
+  programs: string[];
+}
+
+/**
+ * Fetch the real per-material risk ranking (composite Fire Risk Index).
+ * Corresponds to FastAPI: GET /api/v1/insights/risk-ranking
+ */
+export async function getRiskRanking(): Promise<RiskRankingEntry[]> {
+  return fetchFromBackend<RiskRankingEntry[]>("/api/v1/insights/risk-ranking", {
+    method: "GET",
+  });
 }

@@ -39,7 +39,7 @@ import {
   formatPressure,
   formatFlow,
 } from "@/lib/utils";
-import { COMMON_MATERIALS, PLATFORM_INFO } from "@/lib/constants";
+import { PLATFORM_INFO } from "@/lib/constants";
 import { BackendNotice } from "@/components/common/BackendNotice";
 
 export function ExperimentBrowserView() {
@@ -55,14 +55,14 @@ export function ExperimentBrowserView() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("ALL");
-  const [minOxygen, setMinOxygen] = useState(15);
-  const [maxOxygen, setMaxOxygen] = useState(40);
+  const [minOxygen, setMinOxygen] = useState(0);
+  const [maxOxygen, setMaxOxygen] = useState(100);
   const [sortBy, setSortBy] = useState<"date" | "flame_spread_rate" | "oxygen" | "name">("flame_spread_rate");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Selection & Details Modal
   const [selectedExperiment, setSelectedExperiment] = useState<Experiment | null>(null);
-  const [materialsList, setMaterialsList] = useState<string[]>(COMMON_MATERIALS);
+  const [materialsList, setMaterialsList] = useState<string[]>([]);
 
   const fetchRecords = async () => {
     setLoading(true);

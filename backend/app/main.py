@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import chat, experiments, insights
+from app.routers import api_v1, chat, experiments, insights
 
 app = FastAPI(title="Flame in Freefall API")
 
@@ -15,6 +15,7 @@ app.add_middleware(
 app.include_router(experiments.router)
 app.include_router(insights.router)
 app.include_router(chat.router)
+app.include_router(api_v1.router)
 
 
 @app.get("/")

@@ -1,54 +1,24 @@
-import { MicrogravityPlatform } from "@/types";
-
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+// Real platforms present in the extracted dataset (see backend/app/routers/api_v1.py).
 export const PLATFORM_INFO: Record<
-  MicrogravityPlatform,
+  string,
   { label: string; shortName: string; duration: string; description: string }
 > = {
-  ISS_CIR: {
-    label: "ISS Combustion Integrated Rack",
-    shortName: "ISS CIR",
-    duration: "Long-Duration (Days/Months)",
-    description: "Multi-user combustion facility in Destiny module (ACME, BASS, SOFIE)",
+  "ISS-MSG": {
+    label: "ISS Microgravity Science Glovebox",
+    shortName: "ISS MSG",
+    duration: "Long-Duration (minutes to days)",
+    description: "Glovebox facility in the Destiny module used for BASS, BASS-II and Confined Combustion",
   },
-  ZERO_G_FACILITY: {
-    label: "NASA Glenn 5.18s Zero-G Facility",
-    shortName: "5.18s Drop Tower",
-    duration: "5.18 seconds (10^-5 g)",
-    description: "Deep vacuum drop chamber in Cleveland, OH for pure quiescent freefall",
-  },
-  DROP_TOWER_2_2S: {
-    label: "NASA Glenn 2.2s Drop Tower",
-    shortName: "2.2s Drop Tower",
-    duration: "2.2 seconds",
-    description: "Rapid iteration combustion rig testing at NASA GRC",
-  },
-  PARABOLIC_FLIGHT: {
-    label: "Zero-G Parabolic Flight",
-    shortName: "Parabolic Aircraft",
-    duration: "20-25 seconds per parabola",
-    description: "Aircraft trajectory simulation for testing equipment & partial gravity",
-  },
-  SOUNDING_ROCKET: {
-    label: "Suborbital Sounding Rocket",
-    shortName: "Sounding Rocket",
-    duration: "6-15 minutes",
-    description: "Suborbital high-vacuum microgravity combustion flights",
+  Ground: {
+    label: "Ground (1g comparison)",
+    shortName: "Ground",
+    duration: "N/A",
+    description: "Normal-gravity baseline tests used for comparison against the microgravity results",
   },
 };
-
-export const COMMON_MATERIALS = [
-  "PMMA (Polymethyl Methacrylate)",
-  "Polyethylene (PE)",
-  "Nomex / Kevlar Blend",
-  "Cotton/Fiberglass Fabric",
-  "Silicone Rubber Elastomer",
-  "Tefzel (ETFE Insulation)",
-  "Polyurethane Foam",
-  "Solid Methane Hydrate",
-];
 
 export const NAV_LINKS = [
   {

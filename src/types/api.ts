@@ -3,26 +3,16 @@
  * "Flame in Freefall" Dashboard
  */
 
-export type MicrogravityPlatform =
-  | "ISS_CIR"           // Combustion Integrated Rack on the ISS (ACME, BASS, CIR-SOFIE)
-  | "DROP_TOWER_2_2S"   // NASA Glenn 2.2-second Drop Tower
-  | "ZERO_G_FACILITY"   // NASA Glenn 5.18-second Zero-G Facility
-  | "PARABOLIC_FLIGHT"  // Reduced gravity aircraft
-  | "SOUNDING_ROCKET";  // Suborbital microgravity flight
+// Real platforms present in our extracted dataset. "ISS-MSG" is the Microgravity
+// Science Glovebox (where BASS-II/BASS/Confined Combustion ran); "Ground" is a 1g
+// comparison condition used in a handful of rows. Kept as `string` rather than a
+// narrow union since the dataset is still growing and we don't want to silently
+// drop real platform values that don't match an invented enum.
+export type MicrogravityPlatform = string;
 
-export type MaterialCategory =
-  | "Polymers (PMMA, PE)"
-  | "Fabrics & Textiles (Nomex, Cotton)"
-  | "Composites & Insulation"
-  | "Gaseous Fuels"
-  | "Liquid Droplets";
+export type MaterialCategory = string;
 
-export type FlameExtinctionMode =
-  | "Radiative Extinction"
-  | "Blowoff"
-  | "Quenching"
-  | "Fuel Depletion"
-  | "Ongoing Combustion";
+export type FlameExtinctionMode = string;
 
 export interface Experiment {
   id: string;
@@ -31,24 +21,27 @@ export interface Experiment {
   material: string;
   material_category: MaterialCategory;
   platform: MicrogravityPlatform;
-  oxygen_concentration: number;      // percentage, e.g. 21.0 for 21%
-  ambient_pressure_kpa: number;      // kPa
-  flow_velocity_cm_s: number;        // cm/s (forced ventilation flow)
+  oxygen_concentration: number | null;  // percentage, e.g. 21.0 for 21%
+  ambient_pressure_kpa: number | null;  // kPa
+  flow_velocity_cm_s: number | null;    // cm/s (forced ventilation flow)
+  extinction_velocity_cm_s: number | null; // cm/s (flow needed to blow the flame out)
   flame_spread_rate_mm_s: number | null; // mm/s
-  peak_temperature_c: number | null; // Celsius
-  burn_duration_s: number | null;    // seconds
-  quenching_distance_mm: number | null;
+  peak_temperature_c: number | null; // Celsius — not available in current dataset
+  burn_duration_s: number | null;    // seconds — not available in current dataset
+  quenching_distance_mm: number | null; // not available in current dataset
   extinction_mode: FlameExtinctionMode;
-  date_conducted: string;            // ISO date string
-  chamber_atmosphere: string;        // e.g. "O2 / N2" or "O2 / CO2"
-  video_url?: string;                // NASA high-speed imaging URL
+  date_conducted: string | null;     // not available for these reports
+  chamber_atmosphere: string | null; // derived from oxygen_concentration
+  program?: string;
+  source_report?: string;
+  video_url?: string;
   sensor_telemetry_url?: string;
-  notes?: string;
+  notes?: string | null;
 }
 
 export interface ExperimentFilterParams {
   material?: string;
-  platform?: MicrogravityPlatform | "ALL";
+  platform?: string;
   min_oxygen?: number;
   max_oxygen?: number;
   min_flow?: number;
@@ -78,7 +71,7 @@ export interface FireSafetyInsight {
   recommended_protocol: string;
   relevant_materials: string[];
   limiting_oxygen_index: number;
-  affected_platforms: MicrogravityPlatform[];
+  affected_platforms: string[];
   citation_ids: string[];
   created_at: string;
 }
@@ -89,7 +82,7 @@ export interface SystemMetrics {
   materials_cataloged: number;
   critical_safety_alerts: number;
   last_telemetry_sync: string;
-  average_flame_spread_rate: number;
+  average_flame_spread_rate: number | null;
 }
 
 export interface ComparisonDiff {
@@ -113,13 +106,13 @@ export interface ExperimentComparisonResponse {
 export interface Citation {
   id: string;
   title: string;
-  authors: string[];
-  year: number;
+  authors: string[]; // not parsed out of source reports yet — may be empty
+  year: number | null;
   publication: string;
-  doi_or_ntrs_id?: string;
+  doi_or_ntrs_id?: string | null;
   source_url?: string;
-  snippet: string;
-  relevance_score: number;
+  snippet: string; // not populated by the current RAG pipeline
+  relevance_score: number | null;
 }
 
 export interface ChatMessagePayload {

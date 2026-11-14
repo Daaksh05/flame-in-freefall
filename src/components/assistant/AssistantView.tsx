@@ -24,14 +24,13 @@ import {
   ChatRequest,
 } from "@/types";
 import { queryAssistant } from "@/services/assistantService";
-import { COMMON_MATERIALS } from "@/lib/constants";
-import { BENCHMARK_CITATIONS } from "@/data/nasaBenchmarkData";
+import { getMaterialsList } from "@/services/experimentService";
 
 const RESEARCH_QUESTIONS = [
-  "Why do low airflow drafts (2-5 cm/s) enhance flame spread on the ISS?",
-  "How does quiescent microgravity cause spherical radiative extinction in PMMA?",
-  "What are the flammability limits of Nomex in exploration atmospheres (34% O₂)?",
-  "Summarize the cool flame findings from the NASA FLEX droplet combustion tests.",
+  "Does flow velocity affect flame spread in microgravity?",
+  "How does oxygen concentration affect flammability of cotton-fiberglass fabric?",
+  "Does compartment width or confinement affect how dangerous a fire is in microgravity?",
+  "What happens to PMMA flames when ventilation flow is reduced?",
 ];
 
 export function AssistantView() {
@@ -39,8 +38,7 @@ export function AssistantView() {
     {
       role: "assistant",
       content:
-        "Welcome to the **Flame in Freefall** AI Research Assistant. I synthesize empirical datasets from the ISS Combustion Integrated Rack (CIR), Glenn Research Center drop towers, and NASA Technical Memorandums.\n\nAsk me about **microgravity flammability envelopes**, **forced-flow convective hazards**, or **spacecraft fire-suppression protocols**.",
-      citations: [BENCHMARK_CITATIONS[0], BENCHMARK_CITATIONS[1]],
+        "Welcome to the **Flame in Freefall** AI Research Assistant. I answer questions using retrieval-augmented generation grounded only in the NASA technical reports indexed for this project (BASS, BASS-II, FLEX, and Confined Combustion). If the reports don't cover something, I'll say so rather than guess.\n\nAsk me about **flame spread**, **ventilation effects**, or **extinction conditions** for the materials in this dataset.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -48,9 +46,14 @@ export function AssistantView() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [activeCitation, setActiveCitation] = useState<Citation | null>(BENCHMARK_CITATIONS[0]);
+  const [activeCitation, setActiveCitation] = useState<Citation | null>(null);
   const [materialFilter, setMaterialFilter] = useState("");
   const [conversationId, setConversationId] = useState<string | undefined>("conv-01");
+  const [materialsList, setMaterialsList] = useState<string[]>([]);
+
+  useEffect(() => {
+    getMaterialsList().then(setMaterialsList).catch(() => {});
+  }, []);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -97,8 +100,13 @@ export function AssistantView() {
       if (res.citations && res.citations.length > 0) {
         setActiveCitation(res.citations[0]);
       }
-    } catch {
-      // Benchmark fallback handles synthesis seamlessly
+    } catch (error) {
+      const errMsg: ChatMessagePayload = {
+        role: "assistant",
+        content: `Couldn't reach the backend: ${error instanceof Error ? error.message : "unknown error"}. Make sure the FastAPI server is running.`,
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      setMessages((prev) => [...prev, errMsg]);
     } finally {
       setLoading(false);
     }
@@ -143,7 +151,7 @@ export function AssistantView() {
               className="bg-[#0b101e] border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500 font-mono"
             >
               <option value="">All NASA Materials</option>
-              {COMMON_MATERIALS.map((m) => (
+              {materialsList.map((m) => (
                 <option key={m} value={m}>
                   {m}
                 </option>
@@ -193,7 +201,6 @@ export function AssistantView() {
                         >
                           <BookOpen className="w-3 h-3 text-cyan-400" />
                           <span className="truncate max-w-[170px]">{cite.title}</span>
-                          <span className="text-[10px] text-slate-400 font-bold">({cite.year})</span>
                         </button>
                       ))}
                     </div>
@@ -327,25 +334,9 @@ export function AssistantView() {
 
               <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800 space-y-2 text-slate-300">
                 <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400">Authors:</span>
-                  <span className="text-white truncate max-w-[180px]">
-                    {activeCitation.authors.join(", ")}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400">Year:</span>
-                  <span className="text-cyan-400 font-bold">{activeCitation.year}</span>
-                </div>
-                <div className="flex justify-between text-[11px]">
                   <span className="text-slate-400">Publication:</span>
                   <span className="text-white truncate max-w-[180px]">
                     {activeCitation.publication}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-slate-400">Relevance Score:</span>
-                  <span className="text-emerald-400 font-bold">
-                    {(activeCitation.relevance_score * 100).toFixed(0)}%
                   </span>
                 </div>
                 {activeCitation.doi_or_ntrs_id && (
@@ -358,14 +349,16 @@ export function AssistantView() {
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <span className="text-[10px] text-slate-400 uppercase tracking-wider block">
-                  Evidence Snippet
-                </span>
-                <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800/80 text-slate-300 font-sans italic text-xs leading-relaxed">
-                  "{activeCitation.snippet}"
+              {activeCitation.snippet && (
+                <div className="space-y-1.5">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-wider block">
+                    Evidence Snippet
+                  </span>
+                  <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800/80 text-slate-300 font-sans italic text-xs leading-relaxed">
+                    "{activeCitation.snippet}"
+                  </div>
                 </div>
-              </div>
+              )}
 
               {activeCitation.source_url && (
                 <a
