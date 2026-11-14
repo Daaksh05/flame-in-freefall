@@ -217,7 +217,7 @@ export function AssistantView() {
               )}
 
               <div
-                className={`max-w-[85%] rounded-2xl p-4.5 text-xs leading-relaxed space-y-3 shadow-sm ${
+                className={`max-w-[85%] rounded-2xl px-5 py-4 text-xs leading-relaxed space-y-3 shadow-sm ${
                   msg.role === "user"
                     ? "bg-[#EA580C] text-white rounded-tr-none"
                     : "bg-white border border-slate-200 text-slate-700 rounded-tl-none"
