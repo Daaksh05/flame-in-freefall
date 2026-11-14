@@ -65,6 +65,39 @@ const HOW_IT_WORKS = [
   },
 ];
 
+const REFERENCES = [
+  {
+    title: "Detailed Results From the Flame Extinguishment Experiment (FLEX), March 2009 to December 2011",
+    publication: "NASA/TP-2015-216046",
+    url: "https://ntrs.nasa.gov/citations/20150023456",
+  },
+  {
+    title: "Burning and Suppression of Solids-II (BASS-II) Summary Report",
+    publication: "NASA/TM-20210011385",
+    url: "https://ntrs.nasa.gov/citations/20210011385",
+  },
+  {
+    title: "BASS-II Flame Spread Results (Olson, Takahashi, T'ien)",
+    publication: "NTRS 20160000593",
+    url: "https://ntrs.nasa.gov/citations/20160000593",
+  },
+  {
+    title: "Flammability Aspects of a Cotton-Fiberglass Fabric in Opposed and Concurrent Airflow in Microgravity",
+    publication: "NTRS 20130012832",
+    url: "https://ntrs.nasa.gov/citations/20130012832",
+  },
+  {
+    title: "Concurrent Flame Growth, Spread and Extinction Over Composite Fabric Samples in Low Speed Purely Forced Flow in Microgravity",
+    publication: "NTRS 20150008962",
+    url: "https://ntrs.nasa.gov/citations/20150008962",
+  },
+  {
+    title: "Effects of Confinement on Flame Spread in Microgravity",
+    publication: "NTRS 20205004657 (ICES-2020-407)",
+    url: "https://ntrs.nasa.gov/citations/20205004657",
+  },
+];
+
 const FAQS = [
   {
     q: "What does \"microgravity\" actually change about a flame?",
@@ -442,6 +475,46 @@ export function LandingView() {
                 </details>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* References */}
+        <section className="border-t border-slate-200 bg-white">
+          <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FED7AA] bg-[#FFF4EC] px-3 py-1 text-xs font-semibold text-[#EA580C]">
+              REFERENCES
+            </span>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-slate-900">
+              Source research papers
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+              Every NASA Technical Reports Server document indexed to build this dataset and ground
+              the research assistant, cited directly.
+            </p>
+
+            <ol className="mt-8 space-y-3">
+              {REFERENCES.map((ref, i) => (
+                <li
+                  key={ref.url}
+                  className="flex items-start gap-4 rounded-2xl border border-slate-200 p-5 transition-colors hover:border-[#FED7AA] hover:bg-[#FFF4EC]"
+                >
+                  <span className="mt-0.5 text-sm font-semibold text-slate-400">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <a
+                      href={ref.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm font-semibold text-slate-900 hover:text-[#EA580C] hover:underline"
+                    >
+                      {ref.title}
+                    </a>
+                    <p className="mt-1 text-xs text-slate-500">{ref.publication}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
       </main>
