@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FlameLogo } from "@/components/common/FlameLogo";
@@ -98,6 +99,48 @@ const REFERENCES = [
   },
 ];
 
+const CASE_STUDIES = [
+  {
+    badge: "CRITICAL RISK · RANK #1 OF 11",
+    title: "Could a Clear PMMA Rod Sustain Fire at Just 13.5% Oxygen?",
+    material: "PMMA rod (clear/black, r=0.318–0.635 cm)",
+    subtitle: "BASS-II axial stagnation flow flammability boundary test, ISS Microgravity Science Glovebox",
+    keyFactLabel: "Key finding",
+    keyFact: "Sustains a flame down to 13.5% O₂",
+    description:
+      "In microgravity, this PMMA sample sustained a flame down to an oxygen concentration of just 13.5% — well below Earth's ambient 21% and the single lowest flammability limit recorded anywhere in this dataset.",
+    risk: "Potential risk: ground-based flammability testing at 1g can understate how low an oxygen threshold a spacecraft material will actually ignite at in freefall.",
+    publication: "NASA/TM-20210011385 (BASS-II Summary Report)",
+    url: "https://ntrs.nasa.gov/citations/20210011385",
+  },
+  {
+    badge: "CRITICAL RISK · RANK #2 OF 11",
+    title: "Why Does a 200 μm PMMA Sheet Resist Blowoff at 4.0 cm/s?",
+    material: "PMMA sheet (200 μm)",
+    subtitle: "BASS-II opposed-flow extinction test, ISS Microgravity Science Glovebox",
+    keyFactLabel: "Key finding",
+    keyFact: "Needs 4.0 cm/s airflow to extinguish",
+    description:
+      "This thin-film PMMA sample kept burning until airflow reached 4.0 cm/s — the second-highest extinction velocity in the dataset, meaning a stronger-than-expected draft is needed to blow the flame out in freefall.",
+    risk: "Potential risk: cabin ventilation designed around intuition from 1g fire behavior may not supply enough forced airflow to reliably extinguish thin-film polymer fires.",
+    publication: "NASA/TM-20210011385 (BASS-II Summary Report)",
+    url: "https://ntrs.nasa.gov/citations/20210011385",
+  },
+  {
+    badge: "HIGH RISK · RANK #3 OF 11 · 36 TEST CONDITIONS",
+    title: "What 36 Tests on Cotton-Fiberglass Fabric Reveal About Spacecraft Textiles",
+    material: "Cotton-fiberglass fabric (SIBAL)",
+    subtitle: "Tested across BASS, BASS-II, and Confined Combustion — the most-tested material in the dataset",
+    keyFactLabel: "Key finding",
+    keyFact: "Sustains flame to 17.1% O₂; needs 5.0 cm/s to extinguish",
+    description:
+      "Across 36 separate test conditions spanning three NASA microgravity combustion programs, this cotton-fiberglass fabric sustained flames down to 17.1% O₂ and resisted extinction up to 5.0 cm/s airflow — the broadest real evidence base in the dataset.",
+    risk: "Potential risk: common cabin textiles already in wide use may carry more fire risk in freefall than their terrestrial flammability rating suggests.",
+    publication: "NTRS 20130012832 — Flammability Aspects of a Cotton-Fiberglass Fabric in Opposed and Concurrent Airflow in Microgravity",
+    url: "https://ntrs.nasa.gov/citations/20130012832",
+  },
+];
+
 const RELATED_RESEARCH = [
   {
     title: "Flame Spread and Heat Transfer over Discrete Fuels separated by Metal Barriers under Microgravity",
@@ -182,6 +225,9 @@ function FlameShapeDiagram() {
 }
 
 export function LandingView() {
+  const [caseIndex, setCaseIndex] = useState(0);
+  const activeCase = CASE_STUDIES[caseIndex];
+
   return (
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur-xl">
@@ -361,54 +407,96 @@ export function LandingView() {
           </div>
         </section>
 
-        {/* Case Study */}
+        {/* Case Studies */}
         <section className="border-y border-slate-200 bg-[#f8f7f4]">
           <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FED7AA] bg-white px-3 py-1 text-xs font-semibold text-[#EA580C]">
-              EXAMPLE FROM THE DATASET
-            </span>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-slate-900">
-              The dataset&apos;s most critical material
-            </h2>
+            <div className="text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FED7AA] bg-white px-3 py-1 text-xs font-semibold text-[#EA580C]">
+                EXAMPLE FROM THE DATASET
+              </span>
+              <h2 className="mt-4 flex items-center justify-center gap-2 text-3xl font-semibold tracking-[-0.02em] text-slate-900">
+                <FlameLogo className="h-8 w-8" />
+                The dataset&apos;s most critical materials
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-sm text-slate-500">
+                All three cases below are live, real test conditions from the indexed NASA reports —
+                not conceptual examples.
+              </p>
+            </div>
 
-            <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-8">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <span className="inline-flex items-center rounded-full bg-[#FFE4CC] px-2.5 py-1 text-[10px] font-semibold text-[#9A3412]">
-                    CRITICAL RISK · RANK #1 OF 11
-                  </span>
-                  <h3 className="mt-3 text-xl font-semibold text-slate-900">
-                    PMMA rod (clear/black, r=0.318–0.635 cm)
-                  </h3>
-                  <p className="mt-1 text-sm text-slate-500">
-                    BASS-II axial stagnation flow flammability boundary test, ISS Microgravity
-                    Science Glovebox
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-semibold" style={{ color: "#EA580C" }}>
-                    13.5% O₂
-                  </div>
-                  <div className="text-xs text-slate-500">Lowest sustaining oxygen concentration</div>
-                </div>
-              </div>
+            <div className="relative mx-auto mt-10 max-w-3xl rounded-3xl border border-slate-200 bg-white p-8 md:p-10">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                Case {caseIndex + 1} of {CASE_STUDIES.length}
+              </span>
+              <span className="ml-3 inline-flex items-center rounded-full bg-[#FFE4CC] px-2.5 py-1 text-[10px] font-semibold text-[#9A3412]">
+                {activeCase.badge}
+              </span>
 
-              <p className="mt-6 text-sm leading-relaxed text-slate-600">
-                In microgravity, this PMMA sample sustained a flame down to an oxygen concentration
-                of just 13.5% — well below Earth&apos;s ambient 21% and below what would sustain
-                combustion for most materials in a 1g lab test. It is the single lowest flammability
-                limit recorded anywhere in this dataset, making it the clearest real example of why
-                ground-based flammability testing alone can understate risk in freefall.
+              <h3 className="mt-4 text-2xl font-semibold leading-snug text-slate-900">
+                {activeCase.title}
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                {activeCase.material} — {activeCase.subtitle}
               </p>
 
-              <a
-                href="https://ntrs.nasa.gov/citations/20210011385"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#EA580C] hover:underline"
-              >
-                View NTRS record — NASA/TM-20210011385 (BASS-II Summary Report) →
-              </a>
+              <p className="mt-5 text-sm font-semibold" style={{ color: "#EA580C" }}>
+                {activeCase.keyFactLabel}: {activeCase.keyFact}
+              </p>
+
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">{activeCase.description}</p>
+
+              <p className="mt-3 text-sm font-medium" style={{ color: "#EA580C" }}>
+                {activeCase.risk}
+              </p>
+
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+                <a
+                  href={activeCase.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:brightness-110"
+                  style={{ background: "linear-gradient(135deg, #1f2937 0%, #0f172a 100%)" }}
+                >
+                  View NTRS Record
+                  <span aria-hidden>→</span>
+                </a>
+                <p className="text-xs text-slate-400">{activeCase.publication}</p>
+              </div>
+
+              <div className="absolute -bottom-5 right-8 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCaseIndex((i) => (i - 1 + CASE_STUDIES.length) % CASE_STUDIES.length)
+                  }
+                  aria-label="Previous case"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-[#FED7AA] hover:text-[#EA580C]"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCaseIndex((i) => (i + 1) % CASE_STUDIES.length)}
+                  aria-label="Next case"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-[#FED7AA] hover:text-[#EA580C]"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-8 flex items-center justify-center gap-2">
+              {CASE_STUDIES.map((c, i) => (
+                <button
+                  key={c.material}
+                  type="button"
+                  onClick={() => setCaseIndex(i)}
+                  aria-label={`Show case ${i + 1}`}
+                  className={`h-2 rounded-full transition-all ${
+                    i === caseIndex ? "w-6 bg-[#EA580C]" : "w-2 bg-slate-300"
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </section>
