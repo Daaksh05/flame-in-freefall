@@ -1,19 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Radio, Clock, Terminal, ExternalLink } from "lucide-react";
+import { Database, Terminal, ExternalLink } from "lucide-react";
 import { API_BASE_URL } from "@/lib/constants";
+import { getSystemMetrics } from "@/services/insightsService";
 
 const viewTitles: Record<string, { title: string; subtitle: string; code: string }> = {
   "/": {
     title: "Mission Overview & Fire-Safety Insights",
-    subtitle: "Real-time microgravity flame thresholds, flammability ranking & LOI envelopes",
+    subtitle: "Microgravity flame thresholds, flammability ranking & oxygen-limit envelopes",
     code: "VIEW-01 • INSIGHTS",
   },
   "/overview": {
     title: "Mission Overview & Fire-Safety Insights",
-    subtitle: "Real-time microgravity flame thresholds, flammability ranking & LOI envelopes",
+    subtitle: "Microgravity flame thresholds, flammability ranking & oxygen-limit envelopes",
     code: "VIEW-01 • INSIGHTS",
   },
   "/experiments": {
@@ -35,6 +36,14 @@ const viewTitles: Record<string, { title: string; subtitle: string; code: string
 
 export function Header() {
   const pathname = usePathname();
+  const [experimentCount, setExperimentCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getSystemMetrics()
+      .then((m) => setExperimentCount(m.total_experiments))
+      .catch(() => {});
+  }, []);
+
   const current = viewTitles[pathname] || {
     title: "NASA Microgravity Combustion Dashboard",
     subtitle: "Flame in Freefall Research Suite",
@@ -58,13 +67,10 @@ export function Header() {
 
       <div className="flex items-center gap-3 text-xs">
         <div className="hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-emerald-700 md:flex">
-          <Radio className="h-3.5 w-3.5" />
-          <span className="font-medium">ISS CIR Telemetry: Nominal</span>
-        </div>
-
-        <div className="hidden items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-slate-600 lg:flex">
-          <Clock className="h-3.5 w-3.5 text-[#b7631d]" />
-          <span>MET: 214:18:04</span>
+          <Database className="h-3.5 w-3.5" />
+          <span className="font-medium">
+            {experimentCount !== null ? `${experimentCount} archival NASA test conditions` : "Loading dataset…"}
+          </span>
         </div>
 
         <a

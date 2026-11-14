@@ -123,10 +123,10 @@ export function ExperimentBrowserView() {
           </div>
           <h1 className="text-xl md:text-2xl font-bold text-white font-mono flex items-center gap-2">
             <Layers className="w-5 h-5 text-cyan-400" />
-            <span>NASA FLEX & BASS Experiment Browser</span>
+            <span>NASA BASS / BASS-II Experiment Browser</span>
           </h1>
           <p className="text-xs text-slate-400 max-w-2xl">
-            Filter empirical combustion run logs from the ISS Combustion Integrated Rack (CIR), Glenn Research Center 5.18s Zero-G Facility, and drop towers.
+            Filter empirical combustion run logs from the ISS Microgravity Science Glovebox (MSG), with a 1g ground-comparison condition.
           </p>
         </div>
 
@@ -213,7 +213,7 @@ export function ExperimentBrowserView() {
               }}
               className="w-full bg-[#0b101e] border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 font-mono"
             >
-              <option value="ALL">All Platforms (10⁻⁵ g to Parabolic)</option>
+              <option value="ALL">All Platforms</option>
               {Object.entries(PLATFORM_INFO).map(([key, info]) => (
                 <option key={key} value={key}>
                   {info.label} ({info.duration})

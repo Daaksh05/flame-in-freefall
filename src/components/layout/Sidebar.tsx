@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
     name: "Experiment Browser",
     href: "/experiments",
     icon: Layers,
-    tag: "FLEX & BASS Runs",
+    tag: "BASS / BASS-II Runs",
   },
   {
     name: "Side-by-Side Comparison",
@@ -122,7 +122,7 @@ export function Sidebar() {
                 <span>Freefall: 10⁻⁵ g</span>
               </div>
               <span className="rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-medium text-slate-600">
-                ISS CIR & GRC
+                ISS MSG
               </span>
             </div>
           )}

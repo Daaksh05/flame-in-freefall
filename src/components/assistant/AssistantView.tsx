@@ -39,7 +39,9 @@ export function AssistantView() {
       role: "assistant",
       content:
         "Welcome to the **Flame in Freefall** AI Research Assistant. I answer questions using retrieval-augmented generation grounded only in the NASA technical reports indexed for this project (BASS, BASS-II, FLEX, and Confined Combustion). If the reports don't cover something, I'll say so rather than guess.\n\nAsk me about **flame spread**, **ventilation effects**, or **extinction conditions** for the materials in this dataset.",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      // No timestamp here: formatting it with the viewer's locale during SSR
+      // produces a different string server-side vs. client-side (hydration
+      // mismatch). Set once after mount instead.
     },
   ]);
 
@@ -53,6 +55,13 @@ export function AssistantView() {
 
   useEffect(() => {
     getMaterialsList().then(setMaterialsList).catch(() => {});
+    setMessages((prev) =>
+      prev.map((m, i) =>
+        i === 0 && !m.timestamp
+          ? { ...m, timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }
+          : m
+      )
+    );
   }, []);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
