@@ -11,6 +11,11 @@ import {
   Copy,
   Check,
   FileText,
+  Wind,
+  Thermometer,
+  Flame,
+  Quote,
+  Link2,
 } from "lucide-react";
 import {
   ChatMessagePayload,
@@ -21,10 +26,10 @@ import { queryAssistant } from "@/services/assistantService";
 import { getMaterialsList } from "@/services/experimentService";
 
 const RESEARCH_QUESTIONS = [
-  "Does flow velocity affect flame spread in microgravity?",
-  "How does oxygen concentration affect flammability of cotton-fiberglass fabric?",
-  "Does compartment width or confinement affect how dangerous a fire is in microgravity?",
-  "What happens to PMMA flames when ventilation flow is reduced?",
+  { q: "Does flow velocity affect flame spread in microgravity?", icon: Wind },
+  { q: "How does oxygen concentration affect flammability of cotton-fiberglass fabric?", icon: Flame },
+  { q: "Does compartment width or confinement affect how dangerous a fire is in microgravity?", icon: Thermometer },
+  { q: "What happens to PMMA flames when ventilation flow is reduced?", icon: Wind },
 ];
 
 export function AssistantView() {
@@ -121,6 +126,8 @@ export function AssistantView() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const hasConversation = messages.some((m) => m.role === "user");
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-8.5rem)] max-w-7xl mx-auto">
       {/* Main Chat Panel (8 Columns) */}
@@ -164,7 +171,38 @@ export function AssistantView() {
         </div>
 
         {/* Message History Area */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#fafaf9]">
+        <div className="flex-1 overflow-y-auto bg-[#fafaf9]">
+          {!hasConversation ? (
+            <div className="h-full flex flex-col items-center justify-center px-6 py-10 text-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#FFF4EC] border border-[#FED7AA] text-[#EA580C] flex items-center justify-center mb-5">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-semibold text-slate-900">
+                Ask the NASA combustion research assistant
+              </h3>
+              <p className="text-xs text-slate-500 max-w-sm mt-2 leading-relaxed">
+                Grounded only in the NASA technical reports indexed for this project
+                (BASS, BASS-II, FLEX, Confined Combustion). If the reports don&apos;t
+                cover something, it says so instead of guessing.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8 w-full max-w-xl">
+                {RESEARCH_QUESTIONS.map(({ q, icon: Icon }, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSend(q)}
+                    className="group flex items-start gap-3 text-left p-4 rounded-2xl bg-white border border-slate-200 hover:border-[#FED7AA] hover:bg-[#FFF4EC] transition-colors duration-200"
+                  >
+                    <span className="w-7 h-7 rounded-lg bg-[#FFF4EC] group-hover:bg-white text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0 transition-colors duration-200">
+                      <Icon className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="text-xs text-slate-700 leading-snug">{q}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+          <div className="p-5 space-y-5">
           {messages.map((msg, idx) => (
             <div
               key={idx}
@@ -173,13 +211,13 @@ export function AssistantView() {
               }`}
             >
               {msg.role === "assistant" && (
-                <div className="w-8 h-8 rounded-xl bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                   <Bot className="w-4 h-4" />
                 </div>
               )}
 
               <div
-                className={`max-w-[85%] rounded-2xl p-4.5 text-xs leading-relaxed space-y-3 ${
+                className={`max-w-[85%] rounded-2xl p-4.5 text-xs leading-relaxed space-y-3 shadow-sm ${
                   msg.role === "user"
                     ? "bg-[#EA580C] text-white rounded-tr-none"
                     : "bg-white border border-slate-200 text-slate-700 rounded-tl-none"
@@ -240,7 +278,7 @@ export function AssistantView() {
               </div>
 
               {msg.role === "user" && (
-                <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                   <User className="w-4 h-4" />
                 </div>
               )}
@@ -262,25 +300,9 @@ export function AssistantView() {
           )}
 
           <div ref={messagesEndRef} />
-        </div>
-
-        {/* Suggested Research Prompts Bar */}
-        {messages.length <= 2 && (
-          <div className="p-3 bg-white border-t border-slate-100 flex items-center gap-2 overflow-x-auto text-xs">
-            <span className="text-[10px] text-slate-400 whitespace-nowrap uppercase">
-              Quick queries:
-            </span>
-            {RESEARCH_QUESTIONS.map((q, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSend(q)}
-                className="whitespace-nowrap px-3 py-1 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-600 text-[11px] border border-slate-200 transition-colors duration-200"
-              >
-                {q}
-              </button>
-            ))}
           </div>
-        )}
+          )}
+        </div>
 
         {/* Fixed Bottom Input Bar */}
         <div className="p-4 border-t border-slate-100 bg-white">
@@ -289,7 +311,7 @@ export function AssistantView() {
               e.preventDefault();
               handleSend();
             }}
-            className="flex gap-2"
+            className="flex gap-2 items-center rounded-2xl border border-slate-200 bg-[#fafaf9] px-2 py-2 focus-within:border-[#EA580C] focus-within:ring-2 focus-within:ring-[#FED7AA] transition-colors duration-200"
           >
             <input
               type="text"
@@ -297,12 +319,12 @@ export function AssistantView() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={loading}
-              className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#EA580C] focus:ring-2 focus:ring-[#FED7AA] transition-colors duration-200 disabled:opacity-50"
+              className="flex-1 bg-transparent px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="px-5 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] disabled:opacity-40 text-white font-medium text-xs flex items-center gap-2 transition-colors duration-200"
+              className="px-5 py-2.5 rounded-xl bg-[#EA580C] hover:bg-[#C2410C] disabled:opacity-40 text-white font-medium text-xs flex items-center gap-2 transition-colors duration-200 flex-shrink-0"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Send</span>
@@ -376,12 +398,41 @@ export function AssistantView() {
               )}
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-3 text-slate-400">
-              <FileText className="w-8 h-8 text-slate-300" />
-              <p className="text-xs font-medium text-slate-600">No citation selected</p>
-              <p className="text-[11px] text-slate-400 max-w-[200px]">
-                Click on any citation pill in the assistant's responses to inspect original report snippets and NTRS links.
+            <div className="h-full flex flex-col items-center justify-center text-center p-6">
+              <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mb-4">
+                <FileText className="w-5 h-5 text-slate-300" />
+              </div>
+              <p className="text-xs font-medium text-slate-700">No citation selected</p>
+              <p className="text-[11px] text-slate-400 max-w-[220px] mt-1.5 leading-relaxed">
+                Click a citation pill in the assistant&apos;s answer to inspect it here.
               </p>
+
+              <div className="w-full mt-8 space-y-2.5 text-left">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
+                  <span className="w-7 h-7 rounded-lg bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0">
+                    <BookOpen className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="text-[11px] text-slate-500 leading-snug pt-1">
+                    Report title &amp; NTRS document ID
+                  </span>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
+                  <span className="w-7 h-7 rounded-lg bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0">
+                    <Quote className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="text-[11px] text-slate-500 leading-snug pt-1">
+                    The exact evidence snippet the answer was grounded in
+                  </span>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200">
+                  <span className="w-7 h-7 rounded-lg bg-[#FFF4EC] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center flex-shrink-0">
+                    <Link2 className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="text-[11px] text-slate-500 leading-snug pt-1">
+                    A direct link to the source record on NASA NTRS
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </div>
