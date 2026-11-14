@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Manrope } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Header } from "@/components/layout/Header";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -27,15 +25,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${jakarta.variable} ${manrope.variable} h-full antialiased`}>
-      <body className="h-full flex overflow-hidden bg-[#f5f3ef] text-slate-900 selection:bg-[#EA580C]/20 selection:text-[#7C2D12]">
-        <Sidebar />
-
-        <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-          <Header />
-          <main className="flex-1 overflow-y-auto p-6 lg:p-8 bg-[#f5f3ef]">
-            {children}
-          </main>
-        </div>
+      <body className="h-full text-slate-900 selection:bg-[#EA580C]/20 selection:text-[#7C2D12]">
+        {children}
       </body>
     </html>
   );
