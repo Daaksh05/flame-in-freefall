@@ -6,7 +6,7 @@ import ollama
 CHROMA_DIR = Path(__file__).resolve().parents[3] / "data" / "chroma"
 REPORTS_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "reports"
 EMBED_MODEL = "nomic-embed-text"
-CHAT_MODEL = "llama3.2"
+CHAT_MODEL = "llama3.1:8b"
 
 _client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 
@@ -15,13 +15,32 @@ def _get_collection():
     return _client.get_or_create_collection("combustion_reports")
 
 
-def _chunk_text(text: str, chunk_size: int = 800, overlap: int = 100) -> list[str]:
-    chunks = []
-    start = 0
-    while start < len(text):
-        end = start + chunk_size
-        chunks.append(text[start:end])
-        start = end - overlap
+def _chunk_text(text: str, target_size: int = 1400, overlap_paragraphs: int = 1) -> list[str]:
+    """Group paragraphs into chunks up to target_size, never splitting mid-paragraph.
+
+    A giant single paragraph still gets hard-split as a fallback. Carries the
+    last paragraph of each chunk into the next for continuity across boundaries.
+    """
+    paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    chunks: list[str] = []
+    current: list[str] = []
+    current_len = 0
+
+    for para in paragraphs:
+        if current_len + len(para) > target_size and current:
+            chunks.append("\n\n".join(current))
+            current = current[-overlap_paragraphs:] if overlap_paragraphs else []
+            current_len = sum(len(p) for p in current)
+        if len(para) > target_size:
+            for i in range(0, len(para), target_size):
+                chunks.append(para[i : i + target_size])
+            current, current_len = [], 0
+            continue
+        current.append(para)
+        current_len += len(para)
+
+    if current:
+        chunks.append("\n\n".join(current))
     return chunks
 
 
@@ -48,7 +67,7 @@ def index_reports() -> int:
     return count
 
 
-def ask(question: str, n_results: int = 4) -> dict:
+def ask(question: str, n_results: int = 6) -> dict:
     collection = _get_collection()
     if collection.count() == 0:
         return {

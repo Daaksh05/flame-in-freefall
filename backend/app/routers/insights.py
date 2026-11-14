@@ -1,6 +1,11 @@
 from fastapi import APIRouter
 
-from app.services.data_loader import load_experiments, rank_by_extinction_velocity, to_json_records
+from app.services.data_loader import (
+    compute_risk_index,
+    load_experiments,
+    rank_by_extinction_velocity,
+    to_json_records,
+)
 
 router = APIRouter(prefix="/insights", tags=["insights"])
 
@@ -11,6 +16,12 @@ def hardest_to_extinguish(limit: int = 10):
     df = rank_by_extinction_velocity(load_experiments())
     df = df[df["extinction_velocity_cm_s"].notna()]
     return to_json_records(df.head(limit))
+
+
+@router.get("/risk-index")
+def risk_index():
+    """Composite per-material fire-safety risk score (see compute_risk_index)."""
+    return to_json_records(compute_risk_index(load_experiments()))
 
 
 @router.get("/summary")

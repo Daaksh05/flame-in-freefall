@@ -16,6 +16,10 @@ out/
 # OS
 .DS_Store
 
+# Claude Code local settings
+.claude/settings.local.json
+.claude/settings.json
+
 # Data (large raw PDFs kept out of git; extracted text + processed CSVs tracked)
 data/raw/**/*.pdf
 data/chroma/

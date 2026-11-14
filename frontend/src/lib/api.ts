@@ -30,6 +30,16 @@ export type Summary = {
   extinguished_rate_pct: number;
 };
 
+export type RiskIndexEntry = {
+  material: string;
+  min_o2_pct: number | null;
+  max_extinction_velocity_cm_s: number | null;
+  test_count: number;
+  programs: string[];
+  risk_score: number | null;
+  risk_level: "critical" | "serious" | "warning" | "good" | "unknown";
+};
+
 export async function fetchExperiments(): Promise<Experiment[]> {
   const res = await fetch(`${API_URL}/experiments`, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to fetch experiments");
@@ -45,6 +55,12 @@ export async function fetchSummary(): Promise<Summary> {
 export async function fetchRanking(limit = 10): Promise<Experiment[]> {
   const res = await fetch(`${API_URL}/insights/ranking?limit=${limit}`, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to fetch ranking");
+  return res.json();
+}
+
+export async function fetchRiskIndex(): Promise<RiskIndexEntry[]> {
+  const res = await fetch(`${API_URL}/insights/risk-index`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch risk index");
   return res.json();
 }
 

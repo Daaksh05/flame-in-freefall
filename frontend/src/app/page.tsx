@@ -1,15 +1,18 @@
-import { fetchExperiments, fetchRanking, fetchSummary } from "@/lib/api";
+import { fetchExperiments, fetchRanking, fetchRiskIndex, fetchSummary } from "@/lib/api";
 import SummaryCards from "@/components/SummaryCards";
 import ExperimentTable from "@/components/ExperimentTable";
 import ChatPanel from "@/components/ChatPanel";
+import RiskIndexChart from "@/components/RiskIndexChart";
+import ExtinctionScatterChart from "@/components/ExtinctionScatterChart";
 
 export const instant = false;
 
 export default async function Home() {
-  const [summary, experiments, ranking] = await Promise.all([
+  const [summary, experiments, ranking, riskIndex] = await Promise.all([
     fetchSummary(),
     fetchExperiments(),
     fetchRanking(5),
+    fetchRiskIndex(),
   ]);
 
   return (
@@ -23,6 +26,8 @@ export default async function Home() {
 
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8">
         <SummaryCards summary={summary} />
+        <RiskIndexChart data={riskIndex} />
+        <ExtinctionScatterChart experiments={experiments} />
         <ExperimentTable experiments={ranking} title="Hardest to extinguish (highest extinction velocity)" />
         <ExperimentTable experiments={experiments} title="All experiments" />
         <ChatPanel />
