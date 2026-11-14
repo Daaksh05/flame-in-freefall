@@ -10,27 +10,27 @@ const viewTitles: Record<string, { title: string; subtitle: string; code: string
   "/": {
     title: "Mission Overview & Fire-Safety Insights",
     subtitle: "Microgravity flame thresholds, flammability ranking & oxygen-limit envelopes",
-    code: "VIEW-01 • INSIGHTS",
+    code: "Overview",
   },
   "/overview": {
     title: "Mission Overview & Fire-Safety Insights",
     subtitle: "Microgravity flame thresholds, flammability ranking & oxygen-limit envelopes",
-    code: "VIEW-01 • INSIGHTS",
+    code: "Overview",
   },
   "/experiments": {
-    title: "NASA FLEX & BASS Experiment Browser",
+    title: "NASA BASS / BASS-II Experiment Browser",
     subtitle: "Filter empirical test run logs by material, oxygen concentration, and platform",
-    code: "VIEW-02 • BROWSER",
+    code: "Experiments",
   },
   "/comparison": {
     title: "Side-by-Side Comparison Tool",
     subtitle: "Multi-run differential analysis of flame spread rates, flow velocities, and quenching",
-    code: "VIEW-03 • COMPARISON",
+    code: "Comparison",
   },
   "/assistant": {
     title: "AI Combustion Research Assistant",
     subtitle: "RAG engine grounded in NASA Technical Reports Server (NTRS) literature",
-    code: "VIEW-04 • RAG CHAT",
+    code: "Assistant",
   },
 };
 

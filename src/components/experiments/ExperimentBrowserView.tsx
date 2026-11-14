@@ -4,23 +4,16 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Search,
-  Filter,
   Layers,
   Compass,
   Flame,
-  ArrowUpDown,
   RefreshCw,
   Eye,
   X,
-  Gauge,
-  Wind,
   SlidersHorizontal,
   GitCompare,
-  CheckCircle,
-  ExternalLink,
   ChevronLeft,
   ChevronRight,
-  Info,
 } from "lucide-react";
 import {
   Experiment,
@@ -105,27 +98,28 @@ export function ExperimentBrowserView() {
     setSearchQuery("");
     setSelectedMaterial("");
     setSelectedPlatform("ALL");
-    setMinOxygen(15);
-    setMaxOxygen(40);
+    setMinOxygen(0);
+    setMaxOxygen(100);
     setPage(1);
   };
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {backendError && <BackendNotice message={backendError} />}
+
       {/* Top Header Card */}
-      <div className="p-6 rounded-2xl bg-[#111726]/90 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
-        <div className="space-y-1">
+      <div className="p-6 rounded-3xl bg-white border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-orange-400" />
-            <span className="text-[10px] font-mono uppercase text-orange-400 tracking-wider font-semibold">
-              NASA Microgravity Science Data
+            <span className="rounded-full bg-[#e1f1ee] px-2 py-0.5 text-[10px] font-semibold text-[#1f6f68]">
+              Experiment Browser
             </span>
           </div>
-          <h1 className="text-xl md:text-2xl font-bold text-white font-mono flex items-center gap-2">
-            <Layers className="w-5 h-5 text-cyan-400" />
+          <h1 className="text-xl md:text-2xl font-semibold tracking-[-0.02em] text-slate-900 flex items-center gap-2">
+            <Layers className="w-5 h-5 text-[#1f6f68]" />
             <span>NASA BASS / BASS-II Experiment Browser</span>
           </h1>
-          <p className="text-xs text-slate-400 max-w-2xl">
+          <p className="text-sm text-slate-500 max-w-2xl">
             Filter empirical combustion run logs from the ISS Microgravity Science Glovebox (MSG), with a 1g ground-comparison condition.
           </p>
         </div>
@@ -133,14 +127,14 @@ export function ExperimentBrowserView() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={handleReset}
-            className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-mono text-slate-300 border border-slate-700 transition-colors"
+            className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-xs font-medium text-slate-600 border border-slate-200 transition-colors duration-200"
           >
             Reset Filters
           </button>
           <button
             onClick={fetchRecords}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-slate-950 font-semibold text-xs font-mono transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1f6f68] hover:bg-[#19615b] text-white font-medium text-xs transition-colors duration-200 disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             <span>Refresh</span>
@@ -149,21 +143,21 @@ export function ExperimentBrowserView() {
       </div>
 
       {/* Filter Controls Bar */}
-      <div className="p-5 rounded-2xl bg-[#111726]/80 border border-slate-800 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-slate-300 uppercase">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Search & Chamber Filter Parameters</span>
+      <div className="p-6 rounded-3xl bg-white border border-slate-200 space-y-5">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#1f6f68]" />
+            <span>Search &amp; filter parameters</span>
           </div>
-          <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-md border border-cyan-800/40">
-            {total} NASA Records Found
+          <span className="text-xs font-medium text-[#1f6f68] bg-[#edf7f5] px-2.5 py-1 rounded-full border border-[#cfe5e2]">
+            {total} records found
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* Keyword Search */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-mono text-slate-400">Search Test Run / Notes</label>
+            <label className="text-[11px] font-medium text-slate-500">Search test run / notes</label>
             <div className="relative">
               <input
                 type="text"
@@ -176,7 +170,7 @@ export function ExperimentBrowserView() {
                     fetchRecords();
                   }
                 }}
-                className="w-full bg-[#0b101e] border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500/60 font-mono"
+                className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200"
               />
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
             </div>
@@ -184,16 +178,16 @@ export function ExperimentBrowserView() {
 
           {/* Material Name Dropdown */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-mono text-slate-400">Combustion Material</label>
+            <label className="text-[11px] font-medium text-slate-500">Combustion material</label>
             <select
               value={selectedMaterial}
               onChange={(e) => {
                 setSelectedMaterial(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-[#0b101e] border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 font-mono"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200"
             >
-              <option value="">All NASA Materials</option>
+              <option value="">All materials</option>
               {materialsList.map((m) => (
                 <option key={m} value={m}>
                   {m}
@@ -204,16 +198,16 @@ export function ExperimentBrowserView() {
 
           {/* Platform / Gravity Level Selector */}
           <div className="space-y-1.5">
-            <label className="text-[11px] font-mono text-slate-400">Platform / Gravity Facility</label>
+            <label className="text-[11px] font-medium text-slate-500">Platform / gravity facility</label>
             <select
               value={selectedPlatform}
               onChange={(e) => {
                 setSelectedPlatform(e.target.value);
                 setPage(1);
               }}
-              className="w-full bg-[#0b101e] border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500/60 font-mono"
+              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#1f6f68] focus:ring-2 focus:ring-[#cfe5e2] transition-colors duration-200"
             >
-              <option value="ALL">All Platforms</option>
+              <option value="ALL">All platforms</option>
               {Object.entries(PLATFORM_INFO).map(([key, info]) => (
                 <option key={key} value={key}>
                   {info.label} ({info.duration})
@@ -224,34 +218,34 @@ export function ExperimentBrowserView() {
 
           {/* Oxygen Range Slider Controls */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">O₂ Concentration Range</span>
-              <span className="text-orange-400 font-bold">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="text-slate-500">O₂ concentration range</span>
+              <span className="text-[#1f6f68] font-semibold">
                 {minOxygen}% – {maxOxygen}% O₂
               </span>
             </div>
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2 pt-1.5">
               <input
                 type="range"
-                min="12"
-                max="35"
+                min="0"
+                max="100"
                 value={minOxygen}
                 onChange={(e) => {
                   const val = Number(e.target.value);
                   if (val <= maxOxygen) setMinOxygen(val);
                 }}
-                className="w-full accent-orange-500 cursor-pointer"
+                className="w-full accent-[#1f6f68] cursor-pointer"
               />
               <input
                 type="range"
-                min="20"
-                max="50"
+                min="0"
+                max="100"
                 value={maxOxygen}
                 onChange={(e) => {
                   const val = Number(e.target.value);
                   if (val >= minOxygen) setMaxOxygen(val);
                 }}
-                className="w-full accent-orange-500 cursor-pointer"
+                className="w-full accent-[#1f6f68] cursor-pointer"
               />
             </div>
           </div>
@@ -259,35 +253,35 @@ export function ExperimentBrowserView() {
       </div>
 
       {/* Main Experiments Data Table */}
-      <div className="rounded-2xl border border-slate-800 bg-[#111726]/80 overflow-hidden shadow-2xl">
+      <div className="rounded-3xl border border-slate-200 bg-white overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-800 bg-[#0b101e]/80 text-slate-400 font-mono text-[11px] uppercase tracking-wider">
-                <th className="py-3.5 px-4">Test Run / ID</th>
-                <th className="py-3.5 px-4">Substrate / Material</th>
-                <th className="py-3.5 px-4">Platform Facility</th>
+              <tr className="border-b border-slate-100 bg-slate-50 text-slate-500 text-[11px] font-semibold uppercase tracking-[0.06em]">
+                <th className="py-3.5 px-4">Test run / ID</th>
+                <th className="py-3.5 px-4">Substrate / material</th>
+                <th className="py-3.5 px-4">Platform facility</th>
                 <th className="py-3.5 px-4">Oxygen %</th>
-                <th className="py-3.5 px-4">Flow Velocity</th>
+                <th className="py-3.5 px-4">Flow velocity</th>
                 <th className="py-3.5 px-4">Pressure</th>
-                <th className="py-3.5 px-4">Flame Spread</th>
-                <th className="py-3.5 px-4">Extinction Regime</th>
+                <th className="py-3.5 px-4">Flame spread</th>
+                <th className="py-3.5 px-4">Extinction regime</th>
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50 text-slate-300">
+            <tbody className="divide-y divide-slate-100 text-slate-600">
               {loading ? (
                 Array.from({ length: 6 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-28" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-36" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-24" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-16" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-20" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-16" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-20" /></td>
-                    <td className="py-4 px-4"><div className="h-4 bg-slate-800 rounded w-24" /></td>
-                    <td className="py-4 px-4 text-right"><div className="h-4 bg-slate-800 rounded w-16 ml-auto" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-28" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-36" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-24" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-16" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-20" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-16" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-20" /></td>
+                    <td className="py-4 px-4"><div className="h-4 bg-slate-100 rounded w-24" /></td>
+                    <td className="py-4 px-4 text-right"><div className="h-4 bg-slate-100 rounded w-16 ml-auto" /></td>
                   </tr>
                 ))
               ) : experiments.length > 0 ? (
@@ -295,57 +289,51 @@ export function ExperimentBrowserView() {
                   <tr
                     key={exp.id}
                     onClick={() => setSelectedExperiment(exp)}
-                    className="hover:bg-slate-800/40 transition-colors cursor-pointer group"
+                    className="hover:bg-slate-50 transition-colors duration-200 cursor-pointer group"
                   >
-                    <td className="py-3.5 px-4 font-mono font-medium text-white">
+                    <td className="py-3.5 px-4 font-medium text-slate-900">
                       <div className="flex items-center gap-2">
-                        <Flame className="w-3.5 h-3.5 text-orange-400 group-hover:scale-110 transition-transform" />
-                        <span className="group-hover:text-orange-300 transition-colors">
-                          {exp.test_run || exp.name}
-                        </span>
+                        <Flame className="w-3.5 h-3.5 text-[#1f6f68]" />
+                        <span>{exp.test_run || exp.name}</span>
                       </div>
-                      <span className="text-[10px] text-slate-400 block font-mono">
-                        {exp.id}
-                      </span>
+                      <span className="text-[10px] text-slate-400 block">{exp.id}</span>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="font-semibold text-slate-200 block truncate max-w-[180px]">
+                      <span className="font-medium text-slate-700 block truncate max-w-[180px]">
                         {exp.material}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        {exp.material_category}
-                      </span>
+                      <span className="text-[10px] text-slate-400">{exp.material_category}</span>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="px-2 py-0.5 rounded-md bg-slate-900 text-[11px] font-mono text-cyan-300 border border-slate-700/80">
+                      <span className="px-2 py-0.5 rounded-full bg-slate-50 text-[11px] text-slate-600 border border-slate-200">
                         {formatPlatform(exp.platform)}
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono font-bold text-orange-400">
+                    <td className="py-3.5 px-4 font-semibold text-slate-800">
                       {formatOxygen(exp.oxygen_concentration)}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-cyan-300">
+                    <td className="py-3.5 px-4 text-slate-600">
                       {formatFlow(exp.flow_velocity_cm_s)}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono text-slate-300">
+                    <td className="py-3.5 px-4 text-slate-600">
                       {formatPressure(exp.ambient_pressure_kpa)}
                     </td>
 
-                    <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
+                    <td className="py-3.5 px-4 font-semibold text-[#1f6f68]">
                       {formatRate(exp.flame_spread_rate_mm_s)}
                     </td>
 
                     <td className="py-3.5 px-4">
                       <span
-                        className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                        className={`text-[10px] px-2 py-0.5 rounded-full border ${
                           exp.extinction_mode === "Ongoing Combustion"
-                            ? "bg-amber-950/60 text-amber-300 border border-amber-800/60"
-                            : "bg-slate-900 text-slate-300 border border-slate-800"
+                            ? "bg-amber-50 text-amber-700 border-amber-200"
+                            : "bg-slate-50 text-slate-600 border-slate-200"
                         }`}
                       >
                         {exp.extinction_mode || "Ongoing"}
@@ -356,15 +344,15 @@ export function ExperimentBrowserView() {
                       <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => setSelectedExperiment(exp)}
-                          className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-                          title="Inspect Telemetry"
+                          className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 border border-slate-200 transition-colors duration-200"
+                          title="Inspect details"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
                         <Link
                           href={`/comparison?expA=${encodeURIComponent(exp.id)}`}
-                          className="p-1.5 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 transition-colors"
-                          title="Send to Comparison Tool"
+                          className="p-1.5 rounded-lg bg-[#edf7f5] hover:bg-[#dfeeea] text-[#1f6f68] border border-[#cfe5e2] transition-colors duration-200"
+                          title="Send to comparison tool"
                         >
                           <GitCompare className="w-3.5 h-3.5" />
                         </Link>
@@ -374,12 +362,12 @@ export function ExperimentBrowserView() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="py-12 text-center text-slate-400 space-y-2">
-                    <Compass className="w-8 h-8 text-slate-400 mx-auto opacity-50" />
-                    <p className="text-sm font-medium text-slate-200">
+                  <td colSpan={9} className="py-14 text-center text-slate-500 space-y-2">
+                    <Compass className="w-8 h-8 text-slate-300 mx-auto" />
+                    <p className="text-sm font-medium text-slate-700">
                       No matching NASA combustion test runs found
                     </p>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
                       Try broadening your search query or adjusting the oxygen concentration sliders.
                     </p>
                   </td>
@@ -390,16 +378,16 @@ export function ExperimentBrowserView() {
         </div>
 
         {/* Pagination Bar */}
-        <div className="flex items-center justify-between p-4 border-t border-slate-800 bg-[#0b101e]/60 text-xs font-mono text-slate-400">
+        <div className="flex items-center justify-between p-4 border-t border-slate-100 bg-slate-50 text-xs text-slate-500">
           <div>
-            Showing <span className="text-slate-200 font-bold">{experiments.length}</span> of{" "}
-            <span className="text-slate-200 font-bold">{total}</span> total test runs
+            Showing <span className="text-slate-700 font-semibold">{experiments.length}</span> of{" "}
+            <span className="text-slate-700 font-semibold">{total}</span> total test runs
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 transition-colors"
+              className="p-1.5 rounded-lg bg-white hover:bg-slate-100 disabled:opacity-40 text-slate-500 border border-slate-200 transition-colors duration-200"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -409,7 +397,7 @@ export function ExperimentBrowserView() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 transition-colors"
+              className="p-1.5 rounded-lg bg-white hover:bg-slate-100 disabled:opacity-40 text-slate-500 border border-slate-200 transition-colors duration-200"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -419,94 +407,94 @@ export function ExperimentBrowserView() {
 
       {/* Detailed Experiment Modal */}
       {selectedExperiment && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-[#111726] border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-6 relative">
             <button
               onClick={() => setSelectedExperiment(null)}
-              className="absolute top-5 right-5 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+              className="absolute top-5 right-5 p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-700 border border-slate-200 transition-colors duration-200"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20 font-semibold uppercase">
+                <span className="text-[10px] text-[#1f6f68] bg-[#edf7f5] px-2 py-0.5 rounded-full border border-[#cfe5e2] font-semibold">
                   {formatPlatform(selectedExperiment.platform)}
                 </span>
-                <span className="text-[11px] font-mono text-slate-400">
+                <span className="text-[11px] text-slate-400">
                   Run ID: {selectedExperiment.id}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-white font-mono">
+              <h3 className="text-lg font-semibold text-slate-900">
                 {selectedExperiment.name || selectedExperiment.test_run}
               </h3>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono">
-              <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase">Combustion Material</span>
-                <p className="text-xs font-bold text-white mt-0.5 truncate">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <span className="text-[10px] text-slate-500 uppercase">Combustion material</span>
+                <p className="text-xs font-semibold text-slate-800 mt-0.5 truncate">
                   {selectedExperiment.material}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase">Oxygen Conc</span>
-                <p className="text-xs font-bold text-orange-400 mt-0.5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <span className="text-[10px] text-slate-500 uppercase">Oxygen conc.</span>
+                <p className="text-xs font-semibold text-[#1f6f68] mt-0.5">
                   {formatOxygen(selectedExperiment.oxygen_concentration)}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase">Flow Velocity</span>
-                <p className="text-xs font-bold text-cyan-400 mt-0.5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <span className="text-[10px] text-slate-500 uppercase">Flow velocity</span>
+                <p className="text-xs font-semibold text-slate-800 mt-0.5">
                   {formatFlow(selectedExperiment.flow_velocity_cm_s)}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase">Chamber Pressure</span>
-                <p className="text-xs font-bold text-slate-200 mt-0.5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <span className="text-[10px] text-slate-500 uppercase">Chamber pressure</span>
+                <p className="text-xs font-semibold text-slate-800 mt-0.5">
                   {formatPressure(selectedExperiment.ambient_pressure_kpa)}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase">Flame Spread</span>
-                <p className="text-xs font-bold text-emerald-400 mt-0.5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <span className="text-[10px] text-slate-500 uppercase">Flame spread</span>
+                <p className="text-xs font-semibold text-[#1f6f68] mt-0.5">
                   {formatRate(selectedExperiment.flame_spread_rate_mm_s)}
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-[#0b101e] border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase">Burn Duration</span>
-                <p className="text-xs font-bold text-slate-200 mt-0.5">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+                <span className="text-[10px] text-slate-500 uppercase">Burn duration</span>
+                <p className="text-xs font-semibold text-slate-800 mt-0.5">
                   {selectedExperiment.burn_duration_s ? `${selectedExperiment.burn_duration_s} s` : "N/A"}
                 </p>
               </div>
             </div>
 
             {selectedExperiment.notes && (
-              <div className="p-4 rounded-xl bg-[#0b101e] border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider block mb-1">
-                  NASA Test Log & Observations:
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-600 leading-relaxed">
+                <span className="text-[10px] text-[#1f6f68] uppercase tracking-wider block mb-1 font-semibold">
+                  NASA test log &amp; observations
                 </span>
                 {selectedExperiment.notes}
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-3 border-t border-slate-800">
+            <div className="flex items-center justify-between pt-3 border-t border-slate-100">
               <Link
                 href={`/comparison?expA=${encodeURIComponent(selectedExperiment.id)}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-mono font-medium transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#edf7f5] hover:bg-[#dfeeea] text-[#1f6f68] border border-[#cfe5e2] text-xs font-medium transition-colors duration-200"
               >
                 <GitCompare className="w-3.5 h-3.5" />
-                <span>Compare in Side-by-Side View</span>
+                <span>Compare in side-by-side view</span>
               </Link>
 
               <button
                 onClick={() => setSelectedExperiment(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                className="px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-medium transition-colors duration-200"
               >
                 Close
               </button>
