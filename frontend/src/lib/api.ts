@@ -3,22 +3,30 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 export type Experiment = {
   experiment_id: string;
   program: string;
+  task: string;
   platform: string;
   material: string;
-  oxygen_pct: number;
+  sample_width_cm: number | null;
+  oxygen_pct: number | null;
+  oxygen_pct_min: number | null;
+  oxygen_pct_max: number | null;
+  flow_velocity_cm_s: number | null;
+  flow_final_cm_s: number | null;
+  extinction_velocity_cm_s: number | null;
+  flame_spread_rate_mm_s: number | null;
+  rod_regression_rate_mm_s: number | null;
+  outcome: string;
   gravity_level: string;
-  flow_velocity_cm_s: number;
-  flame_spread_rate_mm_s: number;
-  burn_rate_mg_s: number;
-  extinguished: boolean;
   source_report: string;
+  notes: string | null;
+  extinguished: boolean;
 };
 
 export type Summary = {
   total_experiments: number;
   programs: string[];
   materials: string[];
-  avg_flame_spread_rate_mm_s: number;
+  avg_extinction_velocity_cm_s: number;
   extinguished_rate_pct: number;
 };
 

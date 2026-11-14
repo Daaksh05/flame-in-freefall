@@ -4,7 +4,7 @@ export default function SummaryCards({ summary }: { summary: Summary }) {
   const cards = [
     { label: "Total experiments", value: summary.total_experiments },
     { label: "Programs", value: summary.programs.join(", ") },
-    { label: "Avg flame spread rate", value: `${summary.avg_flame_spread_rate_mm_s} mm/s` },
+    { label: "Avg extinction velocity", value: `${summary.avg_extinction_velocity_cm_s} cm/s` },
     { label: "Extinguished rate", value: `${summary.extinguished_rate_pct}%` },
   ];
 

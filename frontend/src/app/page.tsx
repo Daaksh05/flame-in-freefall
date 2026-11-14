@@ -23,7 +23,7 @@ export default async function Home() {
 
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8">
         <SummaryCards summary={summary} />
-        <ExperimentTable experiments={ranking} title="Top flame spread rates (highest risk)" />
+        <ExperimentTable experiments={ranking} title="Hardest to extinguish (highest extinction velocity)" />
         <ExperimentTable experiments={experiments} title="All experiments" />
         <ChatPanel />
       </main>

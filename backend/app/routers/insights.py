@@ -1,14 +1,16 @@
 from fastapi import APIRouter
 
-from app.services.data_loader import load_experiments, rank_by_flame_spread
+from app.services.data_loader import load_experiments, rank_by_extinction_velocity, to_json_records
 
 router = APIRouter(prefix="/insights", tags=["insights"])
 
 
 @router.get("/ranking")
-def flame_spread_ranking(limit: int = 10):
-    df = rank_by_flame_spread(load_experiments())
-    return df.head(limit).to_dict(orient="records")
+def hardest_to_extinguish(limit: int = 10):
+    """Experiments requiring the most flow to extinguish — a proxy for fire-safety risk."""
+    df = rank_by_extinction_velocity(load_experiments())
+    df = df[df["extinction_velocity_cm_s"].notna()]
+    return to_json_records(df.head(limit))
 
 
 @router.get("/summary")
@@ -18,6 +20,6 @@ def summary():
         "total_experiments": len(df),
         "programs": sorted(df["program"].unique().tolist()),
         "materials": sorted(df["material"].unique().tolist()),
-        "avg_flame_spread_rate_mm_s": round(df["flame_spread_rate_mm_s"].mean(), 3),
+        "avg_extinction_velocity_cm_s": round(df["extinction_velocity_cm_s"].dropna().mean(), 3),
         "extinguished_rate_pct": round(df["extinguished"].mean() * 100, 1),
     }
