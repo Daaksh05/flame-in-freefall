@@ -10,10 +10,16 @@ until curl -sf http://127.0.0.1:11434/api/tags >/dev/null 2>&1; do
   sleep 1
 done
 
-CHAT_MODEL="${OLLAMA_CHAT_MODEL:-llama3.1:8b}"
-echo "Pulling models (nomic-embed-text, ${CHAT_MODEL}) -- first boot can take several minutes..."
+echo "Pulling embedding model (nomic-embed-text)..."
 ollama pull nomic-embed-text
-ollama pull "${CHAT_MODEL}"
+
+if [ -n "$OPENROUTER_API_KEY" ]; then
+  echo "OPENROUTER_API_KEY set -- chat generation will use OpenRouter, skipping local chat model pull."
+else
+  CHAT_MODEL="${OLLAMA_CHAT_MODEL:-llama3.1:8b}"
+  echo "Pulling local chat model (${CHAT_MODEL}) -- first boot can take several minutes..."
+  ollama pull "${CHAT_MODEL}"
+fi
 
 echo "Starting FastAPI..."
 uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" &

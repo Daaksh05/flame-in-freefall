@@ -57,7 +57,8 @@ NTRS report PDFs → structured test-condition records → Fire Risk Index + Chr
 - **Frontend**: Next.js 16 (App Router), React, TypeScript, Tailwind CSS — repo root
 - **Backend**: FastAPI (Python) — `backend/`
 - **RAG**: ChromaDB (vector store) + Ollama running `llama3.1:8b` (chat) and `nomic-embed-text`
-  (embeddings) — fully local, no external API dependency
+  (embeddings) locally in development; the deployed instance keeps embeddings local and can route
+  chat generation through OpenRouter for responsive hosted inference (see Deployment below)
 - **Data processing**: pandas, pypdf
 
 ## Running it locally
@@ -108,9 +109,13 @@ Configured for Vercel (frontend) + Railway (backend) — see `railway.toml` and
 `backend/Dockerfile`. Set `NEXT_PUBLIC_API_URL` on Vercel to the deployed backend URL, and
 `ALLOWED_ORIGINS` on Railway to the deployed frontend URL.
 
-`llama3.1:8b` needs ~5-6GB RAM to run, which exceeds low-memory hosting tiers. Set
-`OLLAMA_CHAT_MODEL` (e.g. to `qwen2.5:0.5b`) on a memory-constrained host to use a smaller chat
-model instead — local development defaults to `llama3.1:8b` if the variable is unset.
+`llama3.1:8b` needs ~5-6GB RAM to run, which exceeds low-memory hosting tiers, and even a smaller
+local model is too slow for interactive use on a constrained shared vCPU. Local development runs
+fully local (`llama3.1:8b` chat + `nomic-embed-text` embeddings via Ollama, no external API). The
+deployed instance keeps embeddings local (one cheap call per query) but routes chat generation
+through OpenRouter's hosted API for responsive answers — set `OPENROUTER_API_KEY` (and optionally
+`OPENROUTER_MODEL`, default `openai/gpt-4o-mini`) to enable this; without it, the deployed instance
+falls back to a smaller local model via `OLLAMA_CHAT_MODEL` (e.g. `qwen2.5:0.5b`).
 
 ## Attribution
 

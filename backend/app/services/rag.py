@@ -2,12 +2,38 @@ import os
 from pathlib import Path
 
 import chromadb
+import httpx
 import ollama
 
 CHROMA_DIR = Path(__file__).resolve().parents[3] / "data" / "chroma"
 REPORTS_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "reports"
 EMBED_MODEL = "nomic-embed-text"
 CHAT_MODEL = os.environ.get("OLLAMA_CHAT_MODEL", "llama3.1:8b")
+
+# Embeddings always run locally via Ollama (one cheap call per query). Chat
+# generation defaults to local Ollama too, but on CPU-constrained hosts
+# (e.g. low-memory deploy tiers) that's too slow for interactive use -- set
+# OPENROUTER_API_KEY to route generation through OpenRouter's hosted API instead.
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "openai/gpt-4o-mini")
+
+
+def _chat_completion(prompt: str) -> str:
+    if OPENROUTER_API_KEY:
+        response = httpx.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={"Authorization": f"Bearer {OPENROUTER_API_KEY}"},
+            json={
+                "model": OPENROUTER_MODEL,
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            timeout=60,
+        )
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]
+
+    response = ollama.chat(model=CHAT_MODEL, messages=[{"role": "user", "content": prompt}])
+    return response["message"]["content"]
 
 _client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 
@@ -90,6 +116,6 @@ def ask(question: str, n_results: int = 6) -> dict:
         "contain the answer, say so.\n\n"
         f"Context:\n{context}\n\nQuestion: {question}"
     )
-    response = ollama.chat(model=CHAT_MODEL, messages=[{"role": "user", "content": prompt}])
+    answer = _chat_completion(prompt)
 
-    return {"answer": response["message"]["content"], "sources": list(set(sources))}
+    return {"answer": answer, "sources": list(set(sources))}
