@@ -198,16 +198,18 @@ export function Sidebar() {
               <span className={`h-2 w-2 rounded-full ${backendOnline === true ? "bg-emerald-500" : backendOnline === false ? "bg-amber-500" : "bg-slate-400"}`} />
               {!collapsed && (
                 <span className={`text-[10px] font-semibold ${backendOnline === true ? "text-emerald-600" : "text-amber-600"}`}>
-                  {backendOnline === true ? "LIVE 8000" : "STANDBY"}
+                  {backendOnline === true ? "LIVE" : "STANDBY"}
                 </span>
               )}
             </div>
           </div>
 
           {!collapsed && (
-            <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-[10px] text-slate-500">
-              <span>localhost:8000</span>
-              <span className="font-semibold text-[#EA580C]">REST + RAG</span>
+            <div className="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-[10px] text-slate-500">
+              <span className="truncate" title={API_BASE_URL}>
+                {API_BASE_URL.replace(/^https?:\/\//, "")}
+              </span>
+              <span className="flex-shrink-0 font-semibold text-[#EA580C]">REST + RAG</span>
             </div>
           )}
         </div>
