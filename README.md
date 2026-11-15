@@ -114,7 +114,7 @@ local model is too slow for interactive use on a constrained shared vCPU. Local 
 fully local (`llama3.1:8b` chat + `nomic-embed-text` embeddings via Ollama, no external API). The
 deployed instance keeps embeddings local (one cheap call per query) but routes chat generation
 through a hosted API for responsive answers — set `GROQ_API_KEY` (free tier, low-latency; optionally
-`GROQ_MODEL`, default `llama-3.3-70b-versatile`) or `OPENROUTER_API_KEY` as a paid fallback; without
+`GROQ_MODEL`, default `openai/gpt-oss-20b`) or `OPENROUTER_API_KEY` as a paid fallback; without
 either, the deployed instance falls back to a smaller local model via `OLLAMA_CHAT_MODEL`
 (e.g. `qwen2.5:0.5b`).
 
