@@ -13,12 +13,28 @@ CHAT_MODEL = os.environ.get("OLLAMA_CHAT_MODEL", "llama3.1:8b")
 # Embeddings always run locally via Ollama (one cheap call per query). Chat
 # generation defaults to local Ollama too, but on CPU-constrained hosts
 # (e.g. low-memory deploy tiers) that's too slow for interactive use -- set
-# OPENROUTER_API_KEY to route generation through OpenRouter's hosted API instead.
+# GROQ_API_KEY (preferred: free tier, low-latency) or OPENROUTER_API_KEY to
+# route generation through a hosted API instead.
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "openai/gpt-4o-mini")
 
 
 def _chat_completion(prompt: str) -> str:
+    if GROQ_API_KEY:
+        response = httpx.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {GROQ_API_KEY}"},
+            json={
+                "model": GROQ_MODEL,
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            timeout=60,
+        )
+        response.raise_for_status()
+        return response.json()["choices"][0]["message"]["content"]
+
     if OPENROUTER_API_KEY:
         response = httpx.post(
             "https://openrouter.ai/api/v1/chat/completions",

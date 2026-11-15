@@ -58,7 +58,7 @@ NTRS report PDFs → structured test-condition records → Fire Risk Index + Chr
 - **Backend**: FastAPI (Python) — `backend/`
 - **RAG**: ChromaDB (vector store) + Ollama running `llama3.1:8b` (chat) and `nomic-embed-text`
   (embeddings) locally in development; the deployed instance keeps embeddings local and can route
-  chat generation through OpenRouter for responsive hosted inference (see Deployment below)
+  chat generation through Groq's free hosted API for responsive inference (see Deployment below)
 - **Data processing**: pandas, pypdf
 
 ## Running it locally
@@ -113,9 +113,10 @@ Configured for Vercel (frontend) + Railway (backend) — see `railway.toml` and
 local model is too slow for interactive use on a constrained shared vCPU. Local development runs
 fully local (`llama3.1:8b` chat + `nomic-embed-text` embeddings via Ollama, no external API). The
 deployed instance keeps embeddings local (one cheap call per query) but routes chat generation
-through OpenRouter's hosted API for responsive answers — set `OPENROUTER_API_KEY` (and optionally
-`OPENROUTER_MODEL`, default `openai/gpt-4o-mini`) to enable this; without it, the deployed instance
-falls back to a smaller local model via `OLLAMA_CHAT_MODEL` (e.g. `qwen2.5:0.5b`).
+through a hosted API for responsive answers — set `GROQ_API_KEY` (free tier, low-latency; optionally
+`GROQ_MODEL`, default `llama-3.3-70b-versatile`) or `OPENROUTER_API_KEY` as a paid fallback; without
+either, the deployed instance falls back to a smaller local model via `OLLAMA_CHAT_MODEL`
+(e.g. `qwen2.5:0.5b`).
 
 ## Attribution
 

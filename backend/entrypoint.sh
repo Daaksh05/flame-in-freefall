@@ -13,7 +13,9 @@ done
 echo "Pulling embedding model (nomic-embed-text)..."
 ollama pull nomic-embed-text
 
-if [ -n "$OPENROUTER_API_KEY" ]; then
+if [ -n "$GROQ_API_KEY" ]; then
+  echo "GROQ_API_KEY set -- chat generation will use Groq, skipping local chat model pull."
+elif [ -n "$OPENROUTER_API_KEY" ]; then
   echo "OPENROUTER_API_KEY set -- chat generation will use OpenRouter, skipping local chat model pull."
 else
   CHAT_MODEL="${OLLAMA_CHAT_MODEL:-llama3.1:8b}"
