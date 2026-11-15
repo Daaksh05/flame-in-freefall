@@ -24,7 +24,11 @@ until curl -sf "http://127.0.0.1:${PORT:-8000}/health" >/dev/null 2>&1; do
   sleep 1
 done
 
-echo "Indexing NASA reports into ChromaDB..."
-curl -sf -X POST "http://127.0.0.1:${PORT:-8000}/chat/reindex" || echo "Reindex request failed -- continuing with whatever index (if any) is already on disk."
+if curl -sf "http://127.0.0.1:${PORT:-8000}/health" | grep -q '"rag_engine_status":"indexed"'; then
+  echo "ChromaDB already indexed (shipped with the image) -- skipping reindex."
+else
+  echo "Indexing NASA reports into ChromaDB -- this embeds every chunk and can be slow on constrained CPUs..."
+  curl -sf -X POST "http://127.0.0.1:${PORT:-8000}/chat/reindex" || echo "Reindex request failed -- continuing with whatever index (if any) is already on disk."
+fi
 
 wait "$UVICORN_PID"

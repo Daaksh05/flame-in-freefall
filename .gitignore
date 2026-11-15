@@ -23,4 +23,6 @@ tsconfig.tsbuildinfo
 
 # Data (large raw PDFs kept out of git; extracted text + processed CSVs tracked)
 data/raw/**/*.pdf
-data/chroma/
+
+# data/chroma/ is intentionally tracked: shipping the pre-built vector index
+# avoids re-embedding hundreds of chunks on CPU-constrained deploy hosts.
