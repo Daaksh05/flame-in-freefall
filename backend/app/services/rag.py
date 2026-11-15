@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import chromadb
@@ -6,7 +7,7 @@ import ollama
 CHROMA_DIR = Path(__file__).resolve().parents[3] / "data" / "chroma"
 REPORTS_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "reports"
 EMBED_MODEL = "nomic-embed-text"
-CHAT_MODEL = "llama3.1:8b"
+CHAT_MODEL = os.environ.get("OLLAMA_CHAT_MODEL", "llama3.1:8b")
 
 _client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 

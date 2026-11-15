@@ -10,9 +10,10 @@ until curl -sf http://127.0.0.1:11434/api/tags >/dev/null 2>&1; do
   sleep 1
 done
 
-echo "Pulling models (nomic-embed-text, llama3.1:8b) -- first boot can take several minutes..."
+CHAT_MODEL="${OLLAMA_CHAT_MODEL:-llama3.1:8b}"
+echo "Pulling models (nomic-embed-text, ${CHAT_MODEL}) -- first boot can take several minutes..."
 ollama pull nomic-embed-text
-ollama pull llama3.1:8b
+ollama pull "${CHAT_MODEL}"
 
 echo "Starting FastAPI..."
 uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}" &
